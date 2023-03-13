@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Playground</string>
+
+    <!-- ACTIVITY PERMISSION LOCATION -->
+    <string name="activity_permission_location_skip_btn">Pular</string>
+    <string name="activity_permission_location_info_text">Nós precisamos da sua localização para fornecer informações sobre o tempo na sua região.</string>
+    <string name="activity_permission_location_request_btn">Habilitar localização</string>
 </resources>
