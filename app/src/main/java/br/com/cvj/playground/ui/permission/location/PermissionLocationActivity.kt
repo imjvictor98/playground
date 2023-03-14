@@ -46,7 +46,7 @@ class PermissionLocationActivity :
     }
 
     override fun requestLocationPermission() {
-        if (!PermissionHelper.hasLocationPermissions(this)) {
+        if (!PermissionHelper.hasLocationPermissions(mContext)) {
             PermissionHelper.requestLocationPermission(this)
         } else {
             mPresenter?.handleOnLocationAllowed()
@@ -54,7 +54,7 @@ class PermissionLocationActivity :
     }
 
     override fun afterAllowPermissionsShowHome() {
-        MainActivity.start(this)
+        MainActivity.start(mContext)
         finish()
     }
 

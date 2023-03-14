@@ -2,22 +2,17 @@ package br.com.cvj.playground.ui.main
 
 import android.content.Context
 import android.content.Intent
-import android.location.Location
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import br.com.cvj.playground.R
+import br.com.cvj.playground.data.network.ApiFactory
+import br.com.cvj.playground.databinding.ActivityMainBinding
+import br.com.cvj.playground.ui.BaseActivity
+import br.com.cvj.playground.ui.permission.location.PermissionLocationActivity
+import br.com.cvj.playground.util.extension.toBitMap
 import br.com.cvj.playground.util.helper.LocationHelper
 import br.com.cvj.playground.util.helper.PermissionHelper
-import br.com.cvj.playground.data.network.ApiFactory
-import com.google.android.gms.location.LocationServices
-import com.haroldadmin.cnradapter.NetworkResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-class MainActivity: AppCompatActivity() {
+class MainActivity: BaseActivity<IMainContract.Presenter, ActivityMainBinding>(), IMainContract.View  {
     companion object {
         fun start(context: Context) {
             Intent(context, MainActivity::class.java).apply {
@@ -26,54 +21,42 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    private var mCurrentLocation: Location? = null
-    private val mFusedLocationClient by lazy {
-        LocationServices.getFusedLocationProviderClient(this)
-    }
-
-
-    private val mTextView: TextView? by lazy {
-        findViewById(R.id.activity_main_text)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        if (!PermissionHelper.hasLocationPermissions(this)) {
-            PermissionHelper.requestLocationPermission(this)
-        } else  {
-            LocationHelper.getLastLocation(this)?.addOnSuccessListener {
-                mCurrentLocation = it
-                requestWeather()
+        setBinding(ActivityMainBinding.inflate(layoutInflater))
+        setContentView(mBinding?.root)
+        setPresenter(MainPresenter(this, ApiFactory.getWeatherServices(mContext)))
+
+        if (!PermissionHelper.hasLocationPermissions(mContext)) {
+            PermissionLocationActivity.start(mContext)
+            finish()
+        } else {
+            LocationHelper.getLastLocation(mContext)?.addOnSuccessListener {
+                mPresenter?.requestWeather(it)
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun displayWeatherImage(url: String) {
+        mBinding?.activityMainConditionWeatherImg?.setImageURI(Uri.parse(url))
     }
 
-    private fun requestWeather() {
-        if (mCurrentLocation?.latitude != null && mCurrentLocation?.longitude != null) {
-            CoroutineScope(Dispatchers.Main).launch {
-                val response = ApiFactory(this@MainActivity).weatherServices.getCurrentWeatherAt(
-                    "${mCurrentLocation!!.latitude},${mCurrentLocation!!.longitude}"
-                )
-
-                when (response) {
-                    is NetworkResponse.Success -> {
-                        mTextView?.text = "${response?.body?.location?.name}, " +
-                                "${response.body.location?.region}\n" +
-                                "${response.body.location?.country}"
-                        Log.d("Current Location", "lat: ${mCurrentLocation?.latitude} - lon: ${mCurrentLocation?.longitude}")
-                    }
-                    else -> {
-                        Log.d("Current Location error", "lat: ${mCurrentLocation?.latitude} - lon: ${mCurrentLocation?.longitude}")
-                    }
-                }
-
-            }
-        }
+    override fun displayWeatherText(weather: String) {
+        mBinding?.activityMainConditionWeather?.text = weather
     }
+
+    override fun displayTemperature(temperature: String) {
+        mBinding?.activityMainTemperatureWeather?.text = temperature
+    }
+
+    override fun displayCurrentLocation(location: String) {
+        mBinding?.activityMainLocationWeather?.text = location
+    }
+
+    override fun displayWeatherCondition(condition: String) {
+        mBinding?.activityMainConditionWeather?.text = condition
+    }
+
+    override fun beforeDestroyView() {}
 }

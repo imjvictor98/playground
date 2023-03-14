@@ -1,5 +1,7 @@
 package br.com.cvj.playground.ui
 
+import android.content.Context
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
 abstract class BaseActivity<T, B>: AppCompatActivity(), IBaseContract.BaseView {
@@ -9,12 +11,20 @@ abstract class BaseActivity<T, B>: AppCompatActivity(), IBaseContract.BaseView {
     private var _binding: B? = null
     val mBinding get() = _binding
 
+    private lateinit var _context: Context
+    val mContext get() = _context
+
     fun setPresenter(newPresenter: T) {
         _presenter = newPresenter
     }
 
     fun setBinding(newBinding: B) {
         _binding = newBinding
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        _context = this
     }
 
     override fun onDestroy() {
