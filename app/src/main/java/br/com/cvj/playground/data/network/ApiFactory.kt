@@ -20,6 +20,7 @@ object ApiFactory {
             val url = originalHttpUrl
                 .newBuilder()
                 .addQueryParameter("key", context.getString(R.string.weather_api_key))
+                .addQueryParameter("lang", "pt")
                 .build()
 
             val requestBuilder = original

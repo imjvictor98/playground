@@ -17,6 +17,6 @@ interface IMainContract {
     }
 
     interface Presenter: IBaseContract.BasePresenter<View>{
-        fun requestWeather(location: Location)
+        fun requestWeather(location: Location? = null)
     }
 }
