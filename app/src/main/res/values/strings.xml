@@ -5,4 +5,5 @@
     <string name="activity_permission_location_skip_btn">Pular</string>
     <string name="activity_permission_location_info_text">Nós precisamos da sua localização para fornecer informações sobre o tempo na sua região.</string>
     <string name="activity_permission_location_request_btn">Habilitar localização</string>
+    <string name="title_activity_main_compose">MainComposeActivity</string>
 </resources>

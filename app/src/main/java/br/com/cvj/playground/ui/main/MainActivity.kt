@@ -8,6 +8,7 @@ import br.com.cvj.playground.R
 import br.com.cvj.playground.data.network.ApiFactory
 import br.com.cvj.playground.databinding.ActivityMainBinding
 import br.com.cvj.playground.ui.BaseActivity
+import br.com.cvj.playground.ui.main.compose.MainComposeActivity
 import br.com.cvj.playground.ui.permission.location.PermissionLocationActivity
 import br.com.cvj.playground.util.extension.setImageUrl
 import br.com.cvj.playground.util.helper.LocationHelper
@@ -32,6 +33,9 @@ class MainActivity: BaseActivity<IMainContract.Presenter, ActivityMainBinding>()
         setPresenter(MainPresenter(this, ApiFactory.getWeatherServices(mContext)))
 
         init()
+
+
+//        applicationContext.startActivity(Intent(this, MainComposeActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK })
 
         mBinding?.activityMainTemperatureAutoRenew?.setOnClickListener {
             mLocation?.let {
