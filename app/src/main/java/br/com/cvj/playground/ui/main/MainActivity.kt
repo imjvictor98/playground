@@ -7,6 +7,7 @@ import android.os.Bundle
 import br.com.cvj.playground.R
 import br.com.cvj.playground.data.network.ApiFactory
 import br.com.cvj.playground.databinding.ActivityMainBinding
+import br.com.cvj.playground.domain.model.forecast.ResponseForecast
 import br.com.cvj.playground.ui.BaseActivity
 import br.com.cvj.playground.ui.main.compose.MainComposeActivity
 import br.com.cvj.playground.ui.permission.location.PermissionLocationActivity
@@ -14,7 +15,8 @@ import br.com.cvj.playground.util.extension.setImageUrl
 import br.com.cvj.playground.util.helper.LocationHelper
 import br.com.cvj.playground.util.helper.PermissionHelper
 
-class MainActivity: BaseActivity<IMainContract.Presenter, ActivityMainBinding>(), IMainContract.View  {
+class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(),
+    IMainContract.View {
     companion object {
         fun start(context: Context) {
             Intent(context, MainActivity::class.java).apply {
@@ -34,20 +36,31 @@ class MainActivity: BaseActivity<IMainContract.Presenter, ActivityMainBinding>()
 
         init()
 
-
-//        applicationContext.startActivity(Intent(this, MainComposeActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK })
-
-        mBinding?.activityMainTemperatureAutoRenew?.setOnClickListener {
-            mLocation?.let {
-                mPresenter?.requestWeather(it)
-            } ?: run {
-                init()
+        mBinding?.activityMainTemperatureAutoRenew?.apply {
+            setOnLongClickListener {
+                startActivity(
+                    Intent(
+                        this@MainActivity,
+                        MainComposeActivity::class.java
+                    ).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK })
+                true
+            }
+            setOnClickListener {
+                mLocation?.let {
+                    mPresenter?.requestWeather(it)
+                    mPresenter?.requestForecast(it)
+                } ?: run {
+                    init()
+                }
             }
         }
     }
 
     override fun displayWeatherImage(url: String) {
-        mBinding?.activityMainConditionWeatherImg?.setImageUrl(url, R.drawable.ic_placeholder_rainbow)
+        mBinding?.activityMainConditionWeatherImg?.setImageUrl(
+            url,
+            R.drawable.ic_placeholder_rainbow
+        )
     }
 
     override fun displayWeatherText(weather: String) {
@@ -60,10 +73,15 @@ class MainActivity: BaseActivity<IMainContract.Presenter, ActivityMainBinding>()
 
     override fun displayCurrentLocation(location: String) {
         mBinding?.activityMainLocationWeather?.text = location
+        mBinding?.activityMainCardLocationCountry?.text = location
     }
 
     override fun displayWeatherCondition(condition: String) {
         mBinding?.activityMainConditionWeather?.text = condition
+    }
+
+    override fun setForecastList(list: List<ResponseForecast>) {
+        mBinding?.activityMainForecastList?.adapter = ForecastAdapter(list)
     }
 
     override fun beforeDestroyView() {}
@@ -75,6 +93,7 @@ class MainActivity: BaseActivity<IMainContract.Presenter, ActivityMainBinding>()
         } else {
             LocationHelper.getLastLocation(mContext)?.addOnSuccessListener {
                 mPresenter?.requestWeather(it)
+                mPresenter?.requestForecast(it)
                 mLocation = it
             }
         }

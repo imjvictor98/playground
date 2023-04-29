@@ -1,6 +1,6 @@
 package br.com.cvj.playground.domain.model.weather
 
-enum class MWeatherRegion(val acronym: String, val country: String) {
+enum class WeatherRegion(val acronym: String, val country: String) {
     ACRE("AC", "Acre"),
     ALAGOAS("AL", "Alagoas"),
     AMAPA("AP", "Amapá"),

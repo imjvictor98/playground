@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class MWeatherLocation(
+data class WeatherLocation(
     @Json(name = "country")
     val country: String? = null,
     @Json(name = "lat")
