@@ -17,6 +17,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         resValue "string", "weather_api_key", "d2b27eae3025419b9ff125957230803"
+        resValue "string", "base_url", "https://api.weatherapi.com/v1/"
         vectorDrawables {
             useSupportLibrary true
         }

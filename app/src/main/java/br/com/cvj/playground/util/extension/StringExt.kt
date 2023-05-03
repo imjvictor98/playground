@@ -26,3 +26,11 @@ fun String.toBitMap(): Bitmap? {
     }
     return bm
 }
+
+fun String.applyScheme(scheme: String = "https"): String {
+    return if (this.startsWith(scheme)) {
+        this
+    } else {
+        "${scheme}:${this}"
+    }
+}

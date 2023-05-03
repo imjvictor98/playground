@@ -5,6 +5,7 @@ import br.com.cvj.playground.domain.model.weather.WeatherCondition
 import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class Hour(
@@ -49,7 +50,7 @@ data class Hour(
     @Json(name = "temp_f")
     val tempF: Double? = 0.0,
     @Json(name = "time")
-    val time: String? = "",
+    val time: Date? = null,
     @Json(name = "time_epoch")
     val timeEpoch: Int? = 0,
     @Json(name = "uv")

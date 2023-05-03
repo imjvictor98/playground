@@ -1,36 +1,51 @@
 package br.com.cvj.playground.ui.main
 
+import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import br.com.cvj.playground.R
 import br.com.cvj.playground.databinding.ItemForecastBinding
-import br.com.cvj.playground.domain.model.forecast.ResponseForecast
+import br.com.cvj.playground.domain.model.forecast.Hour
 import br.com.cvj.playground.ui.BaseRecyclerViewAdapter
 import br.com.cvj.playground.ui.BaseViewHolder
+import br.com.cvj.playground.util.extension.applyScheme
+import br.com.cvj.playground.util.extension.format
+import br.com.cvj.playground.util.extension.isEqualsToCurrent
 import br.com.cvj.playground.util.extension.setImageUrl
 
-class ForecastAdapter(items: List<ResponseForecast>): BaseRecyclerViewAdapter<ResponseForecast>(items.toMutableList()) {
-    override fun getViewHolder(view: View): BaseViewHolder<ResponseForecast> {
+class ForecastAdapter(items: List<Hour>): BaseRecyclerViewAdapter<Hour>(items.toMutableList()) {
+    override fun getViewHolder(view: View): BaseViewHolder<Hour> {
         return ViewHolder(ItemForecastBinding.bind(view))
     }
 
     override fun getLayoutRes() = R.layout.item_forecast
 
-    inner class ViewHolder(itemView: ItemForecastBinding): BaseViewHolder<ResponseForecast>(itemView.root) {
-        private val description: TextView = itemView.textView
-        private val icon: ImageView = itemView.imageView
+    inner class ViewHolder(itemView: ItemForecastBinding): BaseViewHolder<Hour>(itemView.root) {
+        private val description: TextView = itemView.itemForecastCondition
+        private val icon: ImageView = itemView.itemForecastIcon
+        private val hour: TextView = itemView.itemForecastHour
+        private val contextView: Context = itemView.root.context
 
-        override fun bind(data: ResponseForecast) {
+        override fun bind(data: Hour) {
             bindData(data)
         }
 
-        override fun bindData(item: ResponseForecast) {
-            item.current?.condition?.icon?.let {
-               icon.setImageUrl("https:$it", R.color.black)
+        override fun bindData(item: Hour) {
+            item.condition?.icon?.let { url ->
+               icon.setImageUrl(url.applyScheme(), R.color.black)
             }
-            item.alerts?.alertList?.firstOrNull()?.event?.let {
+
+            item.condition?.text.let {
                 description.text = it
+            }
+
+            item.time?.let {
+                if (it.isEqualsToCurrent("HH")) {
+                    hour.text = contextView.getString(R.string.now)
+                } else {
+                    hour.text = it.format("HH:mm")
+                }
             }
         }
     }

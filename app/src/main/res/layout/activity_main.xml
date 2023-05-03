@@ -18,13 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="32dp"
-            app:strokeWidth="0dp"
-            app:contentPadding="10dp"
-            app:cardUseCompatPadding="true"
             app:cardCornerRadius="32dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,18 +36,17 @@
                     android:id="@+id/activity_main_card_location_icon"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@drawable/ic_location_blue"/>
+                    android:src="@drawable/ic_location_blue" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/activity_main_card_location_country"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/mazzardm_medium"
-                    android:layout_marginStart="6dp"
-                    android:textSize="14sp"
                     android:layout_gravity="center"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/mazzardm_medium"
                     android:text="Brasília, DF"
-                    />
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
@@ -55,11 +54,14 @@
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/activity_main_temperature_auto_renew"
             style="@style/ThemeOverlay.AppCompat.Dark"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:backgroundTint="@color/blue_900"
+            app:layout_constraintBottom_toBottomOf="@+id/activity_main_card_location"
+            app:layout_constraintEnd_toStartOf="@+id/activity_main_card_location"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+
+            app:layout_constraintTop_toTopOf="@+id/activity_main_card_location"
             app:srcCompat="@drawable/ic_baseline_autorenew_24"
             app:tint="@color/white" />
 
@@ -67,7 +69,6 @@
             android:id="@+id/activity_main_condition_weather_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +80,6 @@
             android:id="@+id/activity_main_condition_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:fontFamily="@font/mazzardm_medium"
             android:text="Ensolarado"
             android:textAlignment="center"
@@ -95,7 +95,6 @@
             android:id="@+id/activity_main_location_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:fontFamily="@font/mazzardm_regular"
             android:lineSpacingMultiplier="1.4"
             android:text="Santa Catarina\nRS"
@@ -112,7 +111,6 @@
             android:id="@+id/activity_main_temperature_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:fontFamily="@font/hirukopro_bold"
             android:text="29"
             android:textAlignment="center"

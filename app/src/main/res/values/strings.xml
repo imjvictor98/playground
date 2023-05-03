@@ -6,4 +6,6 @@
     <string name="activity_permission_location_info_text">Nós precisamos da sua localização para fornecer informações sobre o tempo na sua região.</string>
     <string name="activity_permission_location_request_btn">Habilitar localização</string>
     <string name="title_activity_main_compose">MainComposeActivity</string>
+    <string name="format_hour">%s:%s</string>
+    <string name="now">Agora</string>
 </resources>

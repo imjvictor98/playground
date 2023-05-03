@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
+import androidx.recyclerview.widget.RecyclerView
 import br.com.cvj.playground.R
 import br.com.cvj.playground.data.network.ApiFactory
 import br.com.cvj.playground.databinding.ActivityMainBinding
+import br.com.cvj.playground.domain.model.forecast.Hour
 import br.com.cvj.playground.domain.model.forecast.ResponseForecast
 import br.com.cvj.playground.ui.BaseActivity
 import br.com.cvj.playground.ui.main.compose.MainComposeActivity
@@ -26,6 +28,7 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
     }
 
     private var mLocation: Location? = null
+    private val mRecyclerViewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +83,13 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
         mBinding?.activityMainConditionWeather?.text = condition
     }
 
-    override fun setForecastList(list: List<ResponseForecast>) {
+    override fun setForecastList(list: List<Hour>) {
+        mBinding?.activityMainForecastList?.setRecycledViewPool(mRecyclerViewPool)
         mBinding?.activityMainForecastList?.adapter = ForecastAdapter(list)
+    }
+
+    override fun scrollToCurrentForecast(position: Int) {
+        mBinding?.activityMainForecastList?.scrollToPosition(position)
     }
 
     override fun beforeDestroyView() {}
