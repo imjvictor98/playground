@@ -9,8 +9,7 @@ import br.com.cvj.playground.R
 import br.com.cvj.playground.data.network.ApiFactory
 import br.com.cvj.playground.databinding.ActivityMainBinding
 import br.com.cvj.playground.domain.model.forecast.Hour
-import br.com.cvj.playground.domain.model.forecast.ResponseForecast
-import br.com.cvj.playground.ui.BaseActivity
+import br.com.cvj.playground.ui.base.BaseActivity
 import br.com.cvj.playground.ui.main.compose.MainComposeActivity
 import br.com.cvj.playground.ui.permission.location.PermissionLocationActivity
 import br.com.cvj.playground.util.extension.setImageUrl

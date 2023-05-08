@@ -8,4 +8,6 @@
     <string name="title_activity_main_compose">MainComposeActivity</string>
     <string name="format_hour">%s:%s</string>
     <string name="now">Agora</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
