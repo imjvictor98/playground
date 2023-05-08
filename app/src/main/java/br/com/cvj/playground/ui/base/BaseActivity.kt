@@ -9,7 +9,7 @@ abstract class BaseActivity<T, B>: IBaseContract.BaseView, AppCompatActivity() {
     val mPresenter get() = _presenter
 
     private var _binding: B? = null
-    val mBinding get() = _binding
+    val mBinding get() = _binding ?: throw Exception("Error to use binding")
 
     private lateinit var _context: Context
     val mContext get() = _context
