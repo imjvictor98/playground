@@ -37,6 +37,7 @@
                         android:id="@+id/fragment_weather_resume_image"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_weather_example" />
 
                     <TextView
@@ -44,21 +45,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/hirukopro_bold"
-                        android:gravity="bottom|end"
+                        android:gravity="end|center"
+                        android:layout_marginHorizontal="@dimen/default_margin_horizontal"
                         android:textColor="@color/white"
                         android:textSize="60sp"
-                        tools:text="28°" />
+                        tools:text="28°c" />
 
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/fragment_weather_resume_condition_rv"
+                    android:id="@+id/fragment_weather_resume_days_condition_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="3"
                     tools:itemCount="3"
-                    tools:listitem="@layout/item_resume"
+                    tools:listitem="@layout/item_day_condition"
                     android:layout_marginVertical="8dp"
                     />
 

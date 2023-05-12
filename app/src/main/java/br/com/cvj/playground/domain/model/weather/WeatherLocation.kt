@@ -22,4 +22,16 @@ data class WeatherLocation(
     val region: String? = null,
     @Json(name = "tz_id")
     val tzId: String? = null
-)
+) {
+    fun getRegionFormatted(): String {
+        return StringBuilder()
+            .append(name)
+            .append(
+                if (region?.isNotEmpty() == true) {
+                    "," + System.lineSeparator() + region.split(",")[0]
+                } else {
+                    ""
+                }
+            ).toString()
+    }
+}

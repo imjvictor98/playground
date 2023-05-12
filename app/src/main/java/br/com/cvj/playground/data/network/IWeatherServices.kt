@@ -15,7 +15,8 @@ interface IWeatherServices {
     @GET("forecast.json")
     suspend fun getForecastToday(
         @Query("q") latLong: String,
-        @Query("alerts") alerts: String = true.asDecision()
+        @Query("alerts") alerts: String = true.asDecision(),
+        @Query("days") days: Int = 5,
     ): NetworkResponse<ResponseForecast, BaseModel>
 
 }

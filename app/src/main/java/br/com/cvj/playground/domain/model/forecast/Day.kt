@@ -48,4 +48,18 @@ data class Day(
     val totalsnowCm: Double? = 0.0,
     @Json(name = "uv")
     val uv: Double? = 0.0
+) {
+    fun getDayByTypeDTO(type: DayByType) = DayByTypeDTO(type, this)
+
+}
+
+enum class DayByType {
+    WIND,
+    HUMIDITY,
+    CHANCE_OF_RAIN
+}
+
+data class DayByTypeDTO(
+    val type: DayByType,
+    val day: Day
 )

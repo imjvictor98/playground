@@ -19,4 +19,5 @@
     <color name="gray_100">#B7B9CA</color>
     <color name="gray_600">#656472</color>
     <color name="salmon">#EB4F6D</color>
+    <color name="transparent">#00000000</color>
 </resources>

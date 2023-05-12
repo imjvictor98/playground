@@ -10,13 +10,12 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:contentPadding="14dp"
+        app:contentPadding="8dp"
         app:cardCornerRadius="32dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/white"
-        android:layout_margin="8dp"
         >
 
         <TextView
@@ -24,6 +23,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Quinta, 5 de maio"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:layout_gravity="center"
             android:fontFamily="@font/mazzardm_medium"
             android:textColor="@color/gray_100" />
 

@@ -2,6 +2,7 @@ package br.com.cvj.playground.util.extension
 
 
 import android.graphics.drawable.BitmapDrawable
+import android.view.View
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
@@ -29,4 +30,32 @@ fun AppCompatImageView.setImageUrl(url: String, @DrawableRes placeholderLoading:
         .load(url)
         .placeholder(BitmapDrawable(resources, placeholderBitmap))
         .into(this)
+}
+
+fun ImageView.setGif(@DrawableRes gifId: Int) {
+    Glide
+        .with(this)
+        .asGif()
+        .load(gifId)
+        .into(this)
+}
+
+fun AppCompatImageView.setGif(@DrawableRes gifId: Int) {
+    Glide
+        .with(this)
+        .asGif()
+        .load(gifId)
+        .into(this)
+}
+
+fun ImageView.unsetGif() {
+    Glide
+        .with(this)
+        .clear(this)
+}
+
+fun AppCompatImageView.unsetGif() {
+    Glide
+        .with(this)
+        .clear(this)
 }

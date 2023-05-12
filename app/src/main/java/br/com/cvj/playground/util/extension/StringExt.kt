@@ -8,6 +8,9 @@ import java.io.BufferedInputStream
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 fun String.toBitMap(): Bitmap? {
@@ -32,5 +35,15 @@ fun String.applyScheme(scheme: String = "https"): String {
         this
     } else {
         "${scheme}:${this}"
+    }
+}
+
+fun String.getDate(format: String = ""): Date? {
+    return try {
+        val sdf = SimpleDateFormat(format, Locale.getDefault())
+        val dateNoQuotes = this.replace("'","")
+        sdf.parse(dateNoQuotes)
+    } catch (e: Exception) {
+        return null
     }
 }

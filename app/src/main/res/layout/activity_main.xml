@@ -4,159 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_900"
+    android:background="@color/black_100"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".ui.main.MainActivity">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/activity_main_tab_layout"
-        android:layout_width="match_parent"
-        android:background="@android:color/transparent"
-        app:tabIndicator="@android:color/transparent"
+    <TextView
+        android:id="@+id/activity_main_city"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/mazzardm_medium"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:background="@color/black_100"
+        android:letterSpacing="0.03"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="@dimen/default_margin_horizontal"
+        android:text="Brasília,\nDistrito Federal"
         />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/activity_main_viewpager2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <br.com.cvj.playground.ui.widget.LoadingWidget
+        android:id="@+id/spin_kit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_margin="@dimen/default_margin_horizontal">
+        android:gravity="center"
+        tools:visibility="gone" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/activity_main_card_location"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/activity_main_tab_layout"
+            android:layout_margin="@dimen/default_margin_horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            app:cardCornerRadius="32dp"
-            app:cardUseCompatPadding="true"
-            app:contentPadding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:strokeWidth="0dp">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal">
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Qui, 5 de Dezembro" />
 
-                <ImageView
-                    android:id="@+id/activity_main_card_location_icon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_location_blue" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Dom, 8 de Fevereiro" />
+        </com.google.android.material.tabs.TabLayout>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/activity_main_card_location_country"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="6dp"
-                    android:fontFamily="@font/mazzardm_medium"
-                    android:text="Brasília, DF"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/activity_main_temperature_auto_renew"
-            style="@style/ThemeOverlay.AppCompat.Dark"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue_900"
-            app:layout_constraintBottom_toBottomOf="@+id/activity_main_card_location"
-            app:layout_constraintEnd_toStartOf="@+id/activity_main_card_location"
-            app:layout_constraintStart_toStartOf="parent"
-
-            app:layout_constraintTop_toTopOf="@+id/activity_main_card_location"
-            app:srcCompat="@drawable/ic_baseline_autorenew_24"
-            app:tint="@color/white" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/activity_main_condition_weather_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/activity_main_card_location"
-            app:srcCompat="@drawable/ic_weather_example" />
-
-        <TextView
-            android:id="@+id/activity_main_condition_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/mazzardm_medium"
-            android:text="Ensolarado"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/activity_main_location_weather"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_main_condition_weather_img" />
-
-        <TextView
-            android:id="@+id/activity_main_location_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/mazzardm_regular"
-            android:lineSpacingMultiplier="1.4"
-            android:text="Santa Catarina\nRS"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/activity_main_temperature_weather"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_main_condition_weather" />
-
-        <TextView
-            android:id="@+id/activity_main_temperature_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/hirukopro_bold"
-            android:text="29"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="64sp"
-            app:layout_constraintBottom_toTopOf="@+id/activity_main_forecast_list"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_main_location_weather" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/activity_main_temperature_weather_img"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            app:layout_constraintStart_toEndOf="@+id/activity_main_temperature_weather"
-            app:layout_constraintTop_toTopOf="@+id/activity_main_temperature_weather"
-            app:srcCompat="@drawable/ic_ring_blue_18" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/activity_main_forecast_list"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/activity_main_viewpager2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:listitem="@layout/item_forecast"
-            tools:itemCount="5" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </LinearLayout>

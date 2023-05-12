@@ -2,6 +2,7 @@ package br.com.cvj.playground.data.network
 
 import android.content.Context
 import br.com.cvj.playground.R
+import br.com.cvj.playground.util.extension.DateFormat
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonAdapter

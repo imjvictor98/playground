@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Custom.MaterialButton" parent="ThemeOverlay.Material3.Button">
+    <style name="Custom.MaterialButton" parent="Widget.MaterialComponents.Button">
         <item name="cornerRadius">4dp</item>
         <item name="android:fontFamily">@font/mazzardm_medium</item>
     </style>
@@ -19,6 +18,24 @@
     <style name="ButtonSalmon" parent="Custom.MaterialButton">
         <item name="android:textColor">@color/white</item>
         <item name="backgroundTint">@color/salmon</item>
+    </style>
+
+
+    <style name="TabLayoutAppearance" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:background">@color/black_100</item>
+        <item name="tabIndicator">@drawable/tab_item_selector</item>
+        <item name="tabIndicatorGravity">stretch</item>
+        <item name="tabIndicatorColor">@color/salmon</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance</item>
+        <item name="tabTextColor">@color/tab_item_selector</item>
+        <item name="tabGravity">start</item>
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabMode">scrollable</item>
+    </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/mazzardm_medium</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>
