@@ -5,11 +5,11 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class MWeatherCurrent(
+data class WeatherCurrent(
     @Json(name = "cloud")
     val cloud: Int? = null,
     @Json(name = "condition")
-    val condition: MWeatherCondition? = null,
+    val condition: WeatherCondition? = null,
     @Json(name = "feelslike_c")
     val feelslikeC: Double? = null,
     @Json(name = "feelslike_f")

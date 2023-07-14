@@ -1,15 +1,15 @@
-package br.com.cvj.playground.ui
+package br.com.cvj.playground.ui.base
 
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
-abstract class BaseActivity<T, B>: AppCompatActivity(), IBaseContract.BaseView {
+abstract class BaseActivity<T, B>: IBaseContract.BaseView, AppCompatActivity() {
     private var _presenter: T? = null
     val mPresenter get() = _presenter
 
     private var _binding: B? = null
-    val mBinding get() = _binding
+    val mBinding get() = _binding ?: throw Exception("Error to use binding")
 
     private lateinit var _context: Context
     val mContext get() = _context

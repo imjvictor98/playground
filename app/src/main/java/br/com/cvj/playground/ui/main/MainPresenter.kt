@@ -2,7 +2,7 @@ package br.com.cvj.playground.ui.main
 
 import android.location.Location
 import br.com.cvj.playground.data.network.IWeatherServices
-import br.com.cvj.playground.domain.model.weather.MWeatherRegion
+import br.com.cvj.playground.util.extension.getLatLongAsString
 import com.haroldadmin.cnradapter.NetworkResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,36 +15,36 @@ class MainPresenter(
 ) : IMainContract.Presenter {
     private var mWeatherCall: Job? = null
 
-    override fun requestWeather(location: Location?) {
+    override fun requestForecast(location: Location?) {
         if (location != null) {
+            mView.displayLoading()
             mWeatherCall = CoroutineScope(Dispatchers.Main).launch {
-                val latLong = "${location.latitude},${location.longitude}"
-                when (val response = mWeatherServices.getCurrentWeatherAt(latLong)) {
+                val latLong = location.getLatLongAsString()
+                when (val response = mWeatherServices.getForecastToday(latLong)) {
                     is NetworkResponse.Success -> {
-                        val weather = response.body
-                        val regionCountry = weather.location?.name
-                            ?.plus(System.lineSeparator())
-                            ?.plus(MWeatherRegion.getAcronymByRegion(weather.location.region) ?: weather.location.region)
+                        response.body.location?.let {
+                            mView.displayCity(it.getRegionFormatted())
+                        } ?: run {
+                            mView.hideCity()
+                        }
 
-                        val temperatureInCelsius = weather.current?.tempC?.toInt()
-                        val weatherImage = "https:" + weather.current?.condition?.icon
-                        val conditionWeather = weather.current?.condition?.text
-
-                        mView.displayCurrentLocation(regionCountry.toString())
-                        mView.displayWeatherImage(weatherImage.toString())
-                        mView.displayTemperature(temperatureInCelsius.toString())
-                        mView.displayWeatherCondition(conditionWeather.toString())
+                        val forecasts = response.body.getForecastListDTO()
+                        if (forecasts.isNotEmpty()) {
+                            mView.setupPages(forecasts)
+                        }
                     }
                     else -> {
-
+                        // uma tela de erro talvez, com um retry?
                     }
                 }
 
             }
+            mWeatherCall?.invokeOnCompletion {
+                mView.hideLoading()
+            }
         } else {
             //do nothing
         }
-
     }
 
     override fun beforeDestroyPresenter() {

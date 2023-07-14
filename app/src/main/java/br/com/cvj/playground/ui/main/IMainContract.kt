@@ -1,22 +1,23 @@
 package br.com.cvj.playground.ui.main
 
 import android.location.Location
-import br.com.cvj.playground.ui.IBaseContract
+import br.com.cvj.playground.domain.model.forecast.ForecastDTO
+import br.com.cvj.playground.ui.base.IBaseContract
 
 interface IMainContract {
     interface View: IBaseContract.BaseView {
-        fun displayWeatherImage(url: String)
+        fun displayLoading()
 
-        fun displayWeatherText(weather: String)
+        fun hideLoading()
 
-        fun displayTemperature(temperature: String)
+        fun displayCity(name: String)
 
-        fun displayCurrentLocation(location: String)
+        fun hideCity()
 
-        fun displayWeatherCondition(condition: String)
+        fun setupPages(forecasts: List<ForecastDTO>)
     }
 
     interface Presenter: IBaseContract.BasePresenter<View>{
-        fun requestWeather(location: Location? = null)
+        fun requestForecast(location: Location? = null)
     }
 }

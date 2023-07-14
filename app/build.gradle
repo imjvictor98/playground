@@ -17,12 +17,23 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         resValue "string", "weather_api_key", "d2b27eae3025419b9ff125957230803"
+        resValue "string", "base_url", "https://api.weatherapi.com/v1/"
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     viewBinding {
         enabled true
     }
 
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.2"
+    }
 
     buildTypes {
         release {
@@ -37,26 +48,72 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    /* Android X */
+    def nav_version = "2.5.3"
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+
+    /* Retrofit */
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-    implementation 'com.google.code.gson:gson:2.10.1'
     implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
+    /* NetworkResponse Wrapper */
     implementation 'com.github.haroldadmin:NetworkResponseAdapter:4.1.0'
+
+    /* Gson */
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    /* PlayServices Location */
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
+    /* Material*/
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+
+    /* Glide */
     def glide = "4.15.0"
     implementation "com.github.bumptech.glide:glide:$glide"
     kapt "com.github.bumptech.glide:compiler:$glide"
+
+    /* Test */
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    /****************************** COMPOSE DEPENDENCIES *******************************/
+    /* Compose Android X */
+    def composeBoM = platform("androidx.compose:compose-bom:2023.01.00")
+    implementation composeBoM
+    androidTestImplementation composeBoM
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+
+    /* Compose Activity */
+    implementation 'androidx.activity:activity-compose:1.7.1'
+
+    /* Compose Material 3 */
+    implementation 'androidx.compose.material3:material3'
+
+    /* Compose Test */
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
 }

@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import br.com.cvj.playground.util.helper.PermissionHelper
 import br.com.cvj.playground.databinding.ActivityPermissionLocationBinding
-import br.com.cvj.playground.ui.BaseActivity
+import br.com.cvj.playground.ui.base.BaseActivity
 import br.com.cvj.playground.ui.main.MainActivity
 
 class PermissionLocationActivity :

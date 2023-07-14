@@ -5,4 +5,12 @@
     <string name="activity_permission_location_skip_btn">Pular</string>
     <string name="activity_permission_location_info_text">Nós precisamos da sua localização para fornecer informações sobre o tempo na sua região.</string>
     <string name="activity_permission_location_request_btn">Habilitar localização</string>
+    <string name="title_activity_main_compose">MainComposeActivity</string>
+    <string name="format_hour">%s:%s</string>
+    <string name="now">Agora</string>
+    <string name="string_format_percent">%s%%</string>
+    <string name="string_format_kmh">%s km/h</string>
+    <string name="weather_resume_humidity">Umidade</string>
+    <string name="weather_resume_chance_of_rain">Chuva</string>
+    <string name="weather_resume_wind">Vento</string>
 </resources>

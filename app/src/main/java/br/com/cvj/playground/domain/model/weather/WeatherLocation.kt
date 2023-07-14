@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class MWeatherLocation(
+data class WeatherLocation(
     @Json(name = "country")
     val country: String? = null,
     @Json(name = "lat")
@@ -22,4 +22,16 @@ data class MWeatherLocation(
     val region: String? = null,
     @Json(name = "tz_id")
     val tzId: String? = null
-)
+) {
+    fun getRegionFormatted(): String {
+        return StringBuilder()
+            .append(name)
+            .append(
+                if (region?.isNotEmpty() == true) {
+                    "," + System.lineSeparator() + region.split(",")[0]
+                } else {
+                    ""
+                }
+            ).toString()
+    }
+}

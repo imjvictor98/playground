@@ -1,114 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_900"
-    tools:context=".ui.main.MainActivity"
-    >
+    android:background="@color/black_100"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.main.MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="@dimen/default_margin_horizontal">
+
+        <ImageView
+            android:id="@+id/activity_main_search"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_search_24"
+            android:layout_gravity="center"
+            app:tint="@color/white"/>
+
+        <TextView
+            android:id="@+id/activity_main_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mazzardm_medium"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:letterSpacing="0.03"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginHorizontal="16dp"
+            android:text="Brasília, Distrito Federal"
+            />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <br.com.cvj.playground.ui.widget.LoadingWidget
+        android:id="@+id/spin_kit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/default_margin_horizontal">
+        android:gravity="center"
+        tools:visibility="gone" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/activity_main_temperature_auto_renew"
-            style="@style/ThemeOverlay.AppCompat.Dark"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:backgroundTint="@color/blue_900"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_autorenew_24"
-            app:tint="@color/white" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/activity_main_title_weather_today"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:fontFamily="@font/mazzardm_medium"
-            android:text="Como está o clima hoje?"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/activity_main_tab_layout"
+            android:layout_margin="@dimen/default_margin_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/activity_main_condition_weather_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            app:layout_constraintBottom_toTopOf="@+id/activity_main_condition_weather"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_main_title_weather_today"
-            tools:srcCompat="@drawable/ic_weather_example" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Qui, 5 de Dezembro" />
 
-        <TextView
-            android:id="@+id/activity_main_condition_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/mazzardm_medium"
-            android:text="Ensolarado"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/activity_main_location_weather"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_main_condition_weather_img" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Dom, 8 de Fevereiro" />
+        </com.google.android.material.tabs.TabLayout>
 
-        <TextView
-            android:id="@+id/activity_main_location_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/mazzardm_regular"
-            android:lineSpacingMultiplier="1.4"
-            android:text="Santa Catarina\nRS"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/activity_main_temperature_weather"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_main_condition_weather" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/activity_main_viewpager2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/activity_main_temperature_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/hirukopro_bold"
-            android:includeFontPadding="false"
-            android:text="29"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="64sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_main_location_weather" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/activity_main_temperature_weather_img"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            app:layout_constraintStart_toEndOf="@+id/activity_main_temperature_weather"
-            app:layout_constraintTop_toTopOf="@+id/activity_main_temperature_weather"
-            app:srcCompat="@drawable/ic_ring_blue_18" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</FrameLayout>
+</LinearLayout>
