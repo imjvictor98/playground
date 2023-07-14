@@ -65,7 +65,7 @@ fun Date.getByCalendar(vararg order: DateCalendar, separator: List<String> = lis
                 formatted.append(minuteOfHour?.getZeroStartPaddingString())
             }
         }
-        if (i != order.size-1) {
+        if (i != order.size - 1) {
             formatted.append(separator.getOrNull(i) ?: separator[0])
         }
     }

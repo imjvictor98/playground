@@ -1,4 +1,4 @@
-package br.com.cvj.playground.ui
+package br.com.cvj.playground.ui.base
 
 import android.view.LayoutInflater
 import android.view.View

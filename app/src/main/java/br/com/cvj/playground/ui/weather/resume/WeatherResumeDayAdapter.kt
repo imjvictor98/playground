@@ -5,8 +5,8 @@ import br.com.cvj.playground.R
 import br.com.cvj.playground.databinding.ItemDayConditionBinding
 import br.com.cvj.playground.domain.model.forecast.DayByType
 import br.com.cvj.playground.domain.model.forecast.DayByTypeDTO
-import br.com.cvj.playground.ui.BaseRecyclerViewAdapter
-import br.com.cvj.playground.ui.BaseViewHolder
+import br.com.cvj.playground.ui.base.BaseRecyclerViewAdapter
+import br.com.cvj.playground.ui.base.BaseViewHolder
 
 class WeatherResumeDayAdapter(items: List<DayByTypeDTO>): BaseRecyclerViewAdapter<DayByTypeDTO>(items.toMutableList()) {
     override fun getViewHolder(view: View): BaseViewHolder<DayByTypeDTO> {

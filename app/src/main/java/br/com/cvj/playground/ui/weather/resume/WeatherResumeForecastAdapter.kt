@@ -8,8 +8,8 @@ import androidx.cardview.widget.CardView
 import br.com.cvj.playground.R
 import br.com.cvj.playground.databinding.ItemForecastBinding
 import br.com.cvj.playground.domain.model.forecast.Hour
-import br.com.cvj.playground.ui.BaseRecyclerViewAdapter
-import br.com.cvj.playground.ui.BaseViewHolder
+import br.com.cvj.playground.ui.base.BaseRecyclerViewAdapter
+import br.com.cvj.playground.ui.base.BaseViewHolder
 import br.com.cvj.playground.util.extension.applyScheme
 import br.com.cvj.playground.util.extension.format
 import br.com.cvj.playground.util.extension.isEqualsToCurrent
