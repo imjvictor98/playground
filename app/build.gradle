@@ -16,8 +16,13 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        /* Weather */
         resValue "string", "weather_api_key", "d2b27eae3025419b9ff125957230803"
-        resValue "string", "base_url", "https://api.weatherapi.com/v1/"
+        resValue "string", "weather_base_url", "https://api.weatherapi.com/v1/"
+
+        /* Search Countries */
+        resValue "string", "search_countries_base_url", "https://restcountries.com/"
+
         vectorDrawables {
             useSupportLibrary true
         }
@@ -42,8 +47,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -56,6 +61,9 @@ android {
 }
 
 dependencies {
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation 'androidx.compose.ui:ui-graphics'
+    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
 
     /* Android X */
     def nav_version = "2.5.3"

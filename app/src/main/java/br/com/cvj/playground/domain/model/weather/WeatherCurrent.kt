@@ -3,6 +3,7 @@ package br.com.cvj.playground.domain.model.weather
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class WeatherCurrent(
@@ -52,4 +53,4 @@ data class WeatherCurrent(
     val windKph: Double? = null,
     @Json(name = "wind_mph")
     val windMph: Double? = null
-)
+): Serializable

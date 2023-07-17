@@ -32,6 +32,8 @@ class MainPresenter(
                         if (forecasts.isNotEmpty()) {
                             mView.setupPages(forecasts)
                         }
+
+                        mView.revealSearch()
                     }
                     else -> {
                         // uma tela de erro talvez, com um retry?

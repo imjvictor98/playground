@@ -17,7 +17,7 @@ data class ResponseForecast(
     val forecast: Forecast? = null,
     @Json(name = "location")
     val location: WeatherLocation? = null
-) {
+): Serializable {
     fun getForecastListDTO(): List<ForecastDTO> {
         val list = mutableListOf<ForecastDTO>()
 
@@ -31,7 +31,7 @@ data class ResponseForecast(
 
 
 data class ForecastDTO(
-    val current: WeatherCurrent?,
-    val location: WeatherLocation?,
-    val forecastDay: ForecastDay?
+    val current: WeatherCurrent? = null,
+    val location: WeatherLocation? = null,
+    val forecastDay: ForecastDay? = null
 ): Serializable

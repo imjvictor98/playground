@@ -3,6 +3,7 @@ package br.com.cvj.playground.domain.model.forecast
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class AirQuality(
@@ -22,4 +23,4 @@ data class AirQuality(
     val so2: Double? = null,
     @Json(name = "us-epa-index")
     val usEpaIndex: Int? = null
-)
+): Serializable

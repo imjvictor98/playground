@@ -3,6 +3,7 @@ package br.com.cvj.playground.domain.model.forecast
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class Astro(
@@ -22,4 +23,4 @@ data class Astro(
     val sunrise: String? = null,
     @Json(name = "sunset")
     val sunset: String? = null
-)
+): Serializable

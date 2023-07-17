@@ -13,6 +13,7 @@ import br.com.cvj.playground.databinding.ActivityMainBinding
 import br.com.cvj.playground.domain.model.forecast.ForecastDTO
 import br.com.cvj.playground.ui.base.BaseActivity
 import br.com.cvj.playground.ui.permission.location.PermissionLocationActivity
+import br.com.cvj.playground.ui.search.SearchActivity
 import br.com.cvj.playground.ui.weather.resume.WeatherResumeFragment
 import br.com.cvj.playground.util.extension.DateCalendar
 import br.com.cvj.playground.util.extension.getByCalendar
@@ -60,6 +61,22 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
                 separator = listOf(", ", " ")
             )
         }.attach()
+    }
+
+    override fun revealSearch() {
+        mBinding.activityMainSearch.apply {
+            visible()
+            setOnClickListener {
+                try {
+                    Intent(context, SearchActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                } catch (e: Exception) {
+                    e.message
+                    e.message
+                }
+            }
+        }
     }
 
     override fun displayLoading() {

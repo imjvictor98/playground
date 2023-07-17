@@ -20,31 +20,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Playground"
         tools:targetApi="tiramisu">
-<!--        <activity-->
-<!--            android:name=".ui.main.compose.MainComposeActivity"-->
-<!--            android:exported="false"-->
-<!--            android:label="@string/title_activity_main_compose"-->
-<!--            android:theme="@style/Theme.Playground" />-->
-<!--        <activity-->
-<!--            android:name=".ui.launch.LaunchActivity"-->
-<!--            android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
         <activity
-            android:name=".ui.permission.location.PermissionLocationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.search.SearchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.permission.location.PermissionLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="true">
         </activity>
     </application>
 

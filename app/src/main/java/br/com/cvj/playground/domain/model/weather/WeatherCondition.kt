@@ -3,6 +3,7 @@ package br.com.cvj.playground.domain.model.weather
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class WeatherCondition(
@@ -12,9 +13,9 @@ data class WeatherCondition(
     val icon: String? = null,
     @Json(name = "text")
     val text: String? = null
-)
+): Serializable
 
-enum class WeatherConditionEnum(text: String?) {
+enum class WeatherConditionEnum(text: String?): Serializable {
     SUNNY("Sunny"),
     PARTLY_CLOUDY("Partly cloudy"),
     CLOUDY("Cloudy"),

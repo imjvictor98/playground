@@ -5,6 +5,7 @@ import br.com.cvj.playground.domain.model.weather.WeatherCondition
 import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class Day(
@@ -48,12 +49,12 @@ data class Day(
     val totalsnowCm: Double? = 0.0,
     @Json(name = "uv")
     val uv: Double? = 0.0
-) {
+): Serializable {
     fun getDayByTypeDTO(type: DayByType) = DayByTypeDTO(type, this)
 
 }
 
-enum class DayByType {
+enum class DayByType : Serializable{
     WIND,
     HUMIDITY,
     CHANCE_OF_RAIN
@@ -62,4 +63,4 @@ enum class DayByType {
 data class DayByTypeDTO(
     val type: DayByType,
     val day: Day
-)
+): Serializable

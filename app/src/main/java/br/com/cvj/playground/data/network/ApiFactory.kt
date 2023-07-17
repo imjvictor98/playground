@@ -2,6 +2,7 @@ package br.com.cvj.playground.data.network
 
 import android.content.Context
 import br.com.cvj.playground.R
+import br.com.cvj.playground.data.repository.search.SearchCountriesApi
 import br.com.cvj.playground.util.extension.DateFormat
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.squareup.moshi.FromJson
@@ -20,6 +21,31 @@ import java.util.Date
 import java.util.Locale
 
 object ApiFactory {
+    private val moshi = Moshi
+        .Builder()
+        .add(KotlinJsonAdapterFactory())
+        .add(Date::class.java, object : JsonAdapter<Date>() {
+            @FromJson
+            override fun fromJson(reader: JsonReader): Date? {
+                val dateString = reader.nextString()
+                return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(dateString)
+            }
+
+            @ToJson
+            override fun toJson(writer: JsonWriter, value: Date?) {
+                val dateString =
+                    value?.let {
+                        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(
+                            it
+                        )
+                    } ?: run {
+                        null
+                    }
+                writer.value(dateString)
+            }
+        })
+        .build()
+
     fun getWeatherServices(context: Context): IWeatherServices {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor {
@@ -46,38 +72,29 @@ object ApiFactory {
 
         httpClient.addInterceptor(logging)
 
-        val moshi = Moshi
-            .Builder()
-            .add(KotlinJsonAdapterFactory())
-            .add(Date::class.java, object : JsonAdapter<Date>() {
-                @FromJson
-                override fun fromJson(reader: JsonReader): Date? {
-                    val dateString = reader.nextString()
-                    return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(dateString)
-                }
-
-                @ToJson
-                override fun toJson(writer: JsonWriter, value: Date?) {
-                    val dateString =
-                        value?.let {
-                            SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(
-                                it
-                            )
-                        } ?: run {
-                            null
-                        }
-                    writer.value(dateString)
-                }
-            })
-            .build()
-
         return Retrofit.Builder()
-            .baseUrl(context.getString(R.string.base_url))
+            .baseUrl(context.getString(R.string.weather_base_url))
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(httpClient.build())
             .build()
             .create(IWeatherServices::class.java)
+    }
+
+    fun getSearchCountriesServices(context: Context): SearchCountriesApi {
+        val httpClient = OkHttpClient.Builder()
+        val logging = HttpLoggingInterceptor()
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+
+        httpClient.addInterceptor(logging)
+
+        return Retrofit.Builder()
+            .baseUrl(context.getString(R.string.search_countries_base_url))
+            .addCallAdapterFactory(NetworkResponseAdapterFactory())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(httpClient.build())
+            .build()
+            .create(SearchCountriesApi::class.java)
     }
 }
 

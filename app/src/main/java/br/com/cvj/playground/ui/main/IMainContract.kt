@@ -15,6 +15,8 @@ interface IMainContract {
         fun hideCity()
 
         fun setupPages(forecasts: List<ForecastDTO>)
+
+        fun revealSearch()
     }
 
     interface Presenter: IBaseContract.BasePresenter<View>{
