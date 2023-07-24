@@ -1,17 +1,19 @@
 package br.com.cvj.playground.ui.search
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
-import br.com.cvj.playground.domain.model.search.CountryResponse
+import br.com.cvj.playground.domain.model.search.SearchCityItem
 
+@Stable
 class SearchState(
     query: TextFieldValue,
     focused: Boolean,
     searching: Boolean,
     suggestions: List<String>,
-    searchResults: List<CountryResponse.SearchCountryResponseItem>,
+    searchResults: List<SearchCityItem>,
     isCompleted: Boolean
 ) {
     var query by mutableStateOf(query)

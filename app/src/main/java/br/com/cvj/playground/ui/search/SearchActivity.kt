@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,17 +18,20 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -35,8 +40,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -45,6 +48,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -53,16 +57,20 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.cvj.playground.data.network.ApiFactory
-import br.com.cvj.playground.data.repository.search.SearchCountriesApi
 import br.com.cvj.playground.data.repository.search.SearchCountriesDataSource
+import br.com.cvj.playground.data.repository.search.SearchCountriesRaw
 import br.com.cvj.playground.data.repository.search.SearchCountriesRepository
-import br.com.cvj.playground.domain.model.search.CountryResponse
+import br.com.cvj.playground.domain.model.search.SearchCityItem
+import br.com.cvj.playground.ui.components.dropdownmenu.CompExposedDropDownMenu
+import br.com.cvj.playground.ui.components.dropdownmenu.CompExposedDropDownMenuState
+import br.com.cvj.playground.ui.components.dropdownmenu.rememberCompExposedDropDownMenuState
 import br.com.cvj.playground.ui.theme.Black
+import br.com.cvj.playground.ui.theme.Blue500
 import br.com.cvj.playground.ui.theme.PlaygroundTheme
 import br.com.cvj.playground.ui.theme.White
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import java.util.ArrayList
 
 @RequiresApi(Build.VERSION_CODES.R)
 class SearchActivity : ComponentActivity() {
@@ -74,7 +82,7 @@ class SearchActivity : ComponentActivity() {
                     factory = SearchViewModelFactory(
                         SearchCountriesRepository(
                             SearchCountriesDataSource(
-                                ApiFactory.getSearchCountriesServices(this),
+                                SearchCountriesRaw(LocalContext.current.resources),
                                 ioDispatcher = Dispatchers.IO
                             )
                         )
@@ -92,7 +100,7 @@ fun rememberSearchState(
     focused: Boolean = false,
     searching: Boolean = false,
     suggestions: List<String> = emptyList(),
-    searchResults: List<CountryResponse.SearchCountryResponseItem> = emptyList(),
+    searchResults: List<SearchCityItem> = emptyList(),
     isCompleted: Boolean = false
 ): SearchState {
     return remember {
@@ -116,7 +124,7 @@ private fun SearchHint(modifier: Modifier) {
             .then(modifier)
     ) {
         Text(
-            color = Color.White,
+            color = Color.Black,
             text = "Pesquisa sua cidade"
         )
     }
@@ -146,7 +154,7 @@ fun SearchTextField(
                         end = 16.dp
                     )
             ),
-        color = Black,
+        color = White,
         shape = RoundedCornerShape(percent = 50),
     ) {
         CompositionLocalProvider(LocalContentColor provides LocalContentColor.current.copy(alpha = 0.4f)) {
@@ -172,7 +180,7 @@ fun SearchTextField(
                             .focusRequester(focusRequester)
                             .padding(top = 9.dp, bottom = 8.dp, start = 24.dp, end = 8.dp),
                         singleLine = true,
-                        textStyle = TextStyle(color = White)
+                        textStyle = TextStyle(color = Black)
                     )
 
                     when {
@@ -251,15 +259,22 @@ fun SearchBar(
 fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel,
-    state: SearchState = rememberSearchState()
+    state: SearchState = rememberSearchState(),
+    dropDownMenuState: CompExposedDropDownMenuState<SearchCityItem> = rememberCompExposedDropDownMenuState(
+        iconEnabled = android.R.drawable.arrow_up_float,
+        iconDisabled = android.R.drawable.arrow_down_float,
+        items = if (state.searchResults.isEmpty()) {
+            arrayListOf()
+        } else {
+            state.searchResults as ArrayList
+        }
+    )
 ) {
-
-    val countries by viewModel.uiState.collectAsState()
-
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = Black),
     ) {
-
         SearchBar(
             query = state.query,
             onQueryChange = { state.query = it },
@@ -270,6 +285,15 @@ fun SearchScreen(
             focused = state.focused,
             modifier = modifier
         )
+
+        Row {
+            CompExposedDropDownMenu(
+                state = dropDownMenuState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
 
         LaunchedEffect(state.query.text) {
             state.searching = true
@@ -301,10 +325,11 @@ fun SearchScreen(
             }
 
             SearchDisplay.Results -> {
-                (countries as? SearchUiState.Success)?.countries?.let {
+                dropDownMenuState.onUpdateItems(state.searchResults)
+                state.searchResults.also { searches ->
                     LazyColumn {
-                        items(it) {item ->
-                            Text(text = item.name.common, color = White)
+                        items(searches) {search ->
+                            Text(text = search.name, color = White)
                         }
                     }
                 }
@@ -326,7 +351,7 @@ fun GreetingPreview() {
                 factory = SearchViewModelFactory(
                     SearchCountriesRepository(
                         SearchCountriesDataSource(
-                            ApiFactory.getSearchCountriesServices(LocalContext.current),
+                            SearchCountriesRaw(LocalContext.current.resources),
                             ioDispatcher = Dispatchers.IO
                         )
                     )

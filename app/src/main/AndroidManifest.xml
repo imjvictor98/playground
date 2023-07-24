@@ -18,10 +18,14 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Playground"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".ui.foo.FooActivity"
+            android:exported="true"
+            android:label="@string/title_activity_foo" />
+        <activity
             android:name=".ui.search.SearchActivity"
+            android:theme="@style/Theme.Playground"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,11 +35,12 @@
         </activity>
         <activity
             android:name=".ui.permission.location.PermissionLocationActivity"
+            android:theme="@style/Theme.Playground"
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="true">
-        </activity>
+            android:theme="@style/Theme.Playground"
+            android:exported="true"/>
     </application>
 
 </manifest>

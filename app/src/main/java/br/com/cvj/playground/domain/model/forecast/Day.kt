@@ -2,7 +2,6 @@ package br.com.cvj.playground.domain.model.forecast
 
 
 import br.com.cvj.playground.domain.model.weather.WeatherCondition
-import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.io.Serializable
