@@ -4,13 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import br.com.cvj.playground.data.network.ApiFactory
 import br.com.cvj.playground.databinding.ActivityMainBinding
 import br.com.cvj.playground.domain.model.forecast.ForecastDTO
+import br.com.cvj.playground.domain.model.search.SearchCityItem
 import br.com.cvj.playground.ui.base.BaseActivity
 import br.com.cvj.playground.ui.permission.location.PermissionLocationActivity
 import br.com.cvj.playground.ui.search.SearchActivity
@@ -19,6 +22,7 @@ import br.com.cvj.playground.util.extension.DateCalendar
 import br.com.cvj.playground.util.extension.getByCalendar
 import br.com.cvj.playground.util.extension.getDate
 import br.com.cvj.playground.util.extension.gone
+import br.com.cvj.playground.util.extension.serializable
 import br.com.cvj.playground.util.extension.visible
 import br.com.cvj.playground.util.helper.LocationHelper
 import br.com.cvj.playground.util.helper.PermissionHelper
@@ -27,6 +31,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(),
     IMainContract.View {
     companion object {
+        const val EXTRA_CITY_ITEM = "EXTRA_CITY_ITEM"
+        const val EXTRA_CITY_ITEM_RESULT_CODE = 102
         fun start(context: Context) {
             Intent(context, MainActivity::class.java).apply {
                 context.startActivity(this)
@@ -35,6 +41,14 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
     }
 
     private var mLocation: Location? = null
+
+    private val intentResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == EXTRA_CITY_ITEM_RESULT_CODE) {
+                val resultValue: SearchCityItem? = result.data?.extras?.serializable(EXTRA_CITY_ITEM)
+                init(resultValue)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,10 +83,9 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
             setOnClickListener {
                 try {
                     Intent(context, SearchActivity::class.java).apply {
-                        startActivity(this)
+                        intentResultLauncher.launch(this)
                     }
                 } catch (e: Exception) {
-                    e.message
                     e.message
                 }
             }
@@ -100,7 +113,16 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
 
     override fun beforeDestroyView() {}
 
-    private fun init() {
+    private fun init(cityItem: SearchCityItem? = null) {
+        cityItem?.let {
+            val location = LocationHelper.getLocationByLatLong(
+                cityItem.lat.toDouble(), cityItem.lng.toDouble()
+            )
+            mPresenter?.requestForecast(location)
+            mLocation = location
+            return
+        }
+
         if (!PermissionHelper.hasLocationPermissions(mContext)) {
             PermissionLocationActivity.start(mContext)
             finish()
@@ -110,6 +132,7 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
                 mLocation = it
             }
         }
+
     }
 
     inner class WeatherViewPagerAdapter(

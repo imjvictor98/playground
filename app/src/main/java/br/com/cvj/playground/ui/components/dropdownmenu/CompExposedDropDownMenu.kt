@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.toSize
 @Composable
 fun <T> CompExposedDropDownMenu(
     state: CompExposedDropDownMenuState<T>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOptionSelected: (option: T) -> Unit
 ) {
     Column(modifier = modifier) {
         Box {
@@ -59,6 +60,7 @@ fun <T> CompExposedDropDownMenu(
                         onClick = {
                             state.onSelectedIndex(index)
                             state.onEnabled(false)
+                            onOptionSelected(option)
                         }
                     )
                 }
@@ -74,7 +76,8 @@ fun CompExposedDropDownMenuPreview() {
         state = rememberCompExposedDropDownMenuState(
             iconEnabled = android.R.drawable.arrow_up_float,
             iconDisabled = android.R.drawable.arrow_down_float,
-            items = arrayListOf("Marijuana", "Cannabis", "Cocaine")
-        )
+            items = arrayListOf("Marijuana", "Cannabis", "Cocaine"),
+        ),
+        onOptionSelected = {}
     )
 }

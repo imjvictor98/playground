@@ -15,7 +15,9 @@ import br.com.cvj.playground.util.extension.setImageUrl
 import br.com.cvj.playground.util.extension.visible
 
 
-class WeatherResumeFragment : BaseFragment<IWeatherResumeContract.Presenter, FragmentWeatherResumeBinding>(), IWeatherResumeContract.View {
+class WeatherResumeFragment :
+    BaseFragment<IWeatherResumeContract.Presenter, FragmentWeatherResumeBinding>(),
+    IWeatherResumeContract.View {
 
     companion object {
         private const val FORECAST_EXTRA = "FORECAST_EXTRA"
@@ -73,7 +75,7 @@ class WeatherResumeFragment : BaseFragment<IWeatherResumeContract.Presenter, Fra
     }
 
     private fun getExtras() {
-        val extras =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val extras = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getSerializable(FORECAST_EXTRA, ForecastDTO::class.java)
         } else {
             arguments?.get(FORECAST_EXTRA) as ForecastDTO

@@ -2,6 +2,7 @@ package br.com.cvj.playground.util.helper
 
 import android.content.Context
 import android.location.Location
+import androidx.annotation.FloatRange
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -30,5 +31,17 @@ object LocationHelper {
         } else {
             null
         }
+    }
+
+    fun getLocationByLatLong(
+        @FloatRange(from = -90.0, to = 90.0) latitude: Double,
+        @FloatRange(from = -180.0, to = 180.0) longitude: Double,
+    ): Location {
+        val location = Location("").apply {
+            setLatitude(latitude)
+            setLongitude(longitude)
+        }
+
+        return location
     }
 }

@@ -9,6 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 
 object ApiFactory {
 
@@ -37,7 +38,7 @@ object ApiFactory {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
 
-        httpClient.addInterceptor(logging)
+        httpClient.addInterceptor(logging).callTimeout(10000, TimeUnit.SECONDS)
 
         return Retrofit.Builder()
             .baseUrl(context.getString(R.string.weather_base_url))

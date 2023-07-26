@@ -2,6 +2,7 @@
 
 package br.com.cvj.playground.ui.search
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,20 +18,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -48,7 +44,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -64,15 +59,14 @@ import br.com.cvj.playground.domain.model.search.SearchCityItem
 import br.com.cvj.playground.ui.components.dropdownmenu.CompExposedDropDownMenu
 import br.com.cvj.playground.ui.components.dropdownmenu.CompExposedDropDownMenuState
 import br.com.cvj.playground.ui.components.dropdownmenu.rememberCompExposedDropDownMenuState
+import br.com.cvj.playground.ui.main.MainActivity.Companion.EXTRA_CITY_ITEM
+import br.com.cvj.playground.ui.main.MainActivity.Companion.EXTRA_CITY_ITEM_RESULT_CODE
 import br.com.cvj.playground.ui.theme.Black
-import br.com.cvj.playground.ui.theme.Blue500
 import br.com.cvj.playground.ui.theme.PlaygroundTheme
 import br.com.cvj.playground.ui.theme.White
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import java.util.ArrayList
 
-@RequiresApi(Build.VERSION_CODES.R)
 class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,9 +81,18 @@ class SearchActivity : ComponentActivity() {
                             )
                         )
                     )
-                )
+                ),
+                onOptionSelected = { city -> setCityResult(city) }
             )
         }
+    }
+
+    private fun setCityResult(city: SearchCityItem) {
+        val resultIntent = Intent().apply {
+            putExtra(EXTRA_CITY_ITEM, city)
+        }
+        setResult(EXTRA_CITY_ITEM_RESULT_CODE, resultIntent)
+        finish()
     }
 }
 
@@ -268,7 +271,8 @@ fun SearchScreen(
         } else {
             state.searchResults as ArrayList
         }
-    )
+    ),
+    onOptionSelected: (option: SearchCityItem) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -291,7 +295,8 @@ fun SearchScreen(
                 state = dropDownMenuState,
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(16.dp),
+                onOptionSelected = onOptionSelected
             )
         }
 
@@ -328,12 +333,13 @@ fun SearchScreen(
                 dropDownMenuState.onUpdateItems(state.searchResults)
                 state.searchResults.also { searches ->
                     LazyColumn {
-                        items(searches) {search ->
+                        items(searches) { search ->
                             Text(text = search.name, color = White)
                         }
                     }
                 }
             }
+
             else -> {
 
             }
@@ -356,7 +362,8 @@ fun GreetingPreview() {
                         )
                     )
                 )
-            )
+            ),
+            onOptionSelected = {}
         )
     }
 }
