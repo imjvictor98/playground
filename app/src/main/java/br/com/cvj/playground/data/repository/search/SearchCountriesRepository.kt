@@ -5,5 +5,5 @@ class SearchCountriesRepository(
 ) {
     fun fetchCountriesBy(query: String) =
         searchCountriesDataSource.fetchCountriesBy()
-            ?.filter { it.name.contains(query, true) }
+            ?.filter { it.name.trim().startsWith(query.trim(), true) }
 }

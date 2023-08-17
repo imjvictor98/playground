@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -26,7 +26,9 @@ import br.com.cvj.playground.util.extension.serializable
 import br.com.cvj.playground.util.extension.visible
 import br.com.cvj.playground.util.helper.LocationHelper
 import br.com.cvj.playground.util.helper.PermissionHelper
+import br.com.cvj.playground.util.helper.PlayServicesHelper
 import com.google.android.material.tabs.TabLayoutMediator
+import timber.log.Timber
 
 class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(),
     IMainContract.View {
@@ -126,13 +128,25 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
         if (!PermissionHelper.hasLocationPermissions(mContext)) {
             PermissionLocationActivity.start(mContext)
             finish()
+            //TODO: Melhorar este fluxo. Podemos colocar um alert falando que se ele não puder compartilhar a localização ele deve sair do app ou habilitar.
+        } else if (PlayServicesHelper.isAvailable(mContext)) {
+            Toast.makeText(mContext, "Você não tem o play services", Toast.LENGTH_LONG).show()
         } else {
-            LocationHelper.getLastLocation(mContext)?.addOnSuccessListener {
-                mPresenter?.requestForecast(it)
-                mLocation = it
-            }
-        }
+            LocationHelper.getLastLocation(mContext, object : LocationHelper.LocationAvailabilityListener {
+                override fun onSuccess(location: Location) {
+                    mPresenter?.requestForecast(location)
+                    mLocation = location
+                }
 
+                override fun onFailure() {
+                    Timber.e("Falha ao obter localização")
+                }
+
+                override fun onError(exception: Exception) {
+                    Timber.e(exception)
+                }
+            })
+        }
     }
 
     inner class WeatherViewPagerAdapter(

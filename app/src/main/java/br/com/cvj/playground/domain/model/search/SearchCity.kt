@@ -17,6 +17,6 @@ data class SearchCityItem(
     val name: String = ""
 ): Serializable {
     override fun toString(): String {
-        return name
+        return "${name}, $country"
     }
 }
