@@ -15,4 +15,5 @@
     <string name="weather_resume_wind">Vento</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_foo">FooActivity</string>
+    <string name="title_activity_example">Example</string>
 </resources>

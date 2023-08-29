@@ -15,16 +15,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val LightColorScheme = lightColorScheme(
-    primary = Black,
-    secondary = White,
-    tertiary = Purple200
+private val DarkColorScheme = darkColorScheme(
+    primary = Colors.Black,
+    secondary = Colors.Gray100,
+    tertiary = Colors.Salmon
 )
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Black,
-    secondary = White,
-    tertiary = Purple200
+private val LightColorScheme = lightColorScheme(
+    primary = Colors.Black,
+    secondary = Colors.Gray100,
+    tertiary = Colors.Salmon
+
+    /* Other default colors to override
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+    */
 )
 
 @Composable
@@ -54,7 +64,7 @@ fun PlaygroundTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography =Typography,
+        typography = Typography,
         content = content
     )
 }

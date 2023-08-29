@@ -5,7 +5,9 @@ import br.com.cvj.playground.ui.base.IBaseContract
 
 interface ISearchContract {
     interface View: IBaseContract.BaseView {
-        fun updateDropdown(cities: List<SearchCityItem>)
+        fun showResults(cities: List<SearchCityItem>)
+
+        fun clearResults()
 
         fun showSpinner()
 
@@ -14,5 +16,7 @@ interface ISearchContract {
 
     interface Presenter: IBaseContract.BasePresenter<View> {
         fun findCityByName(name: String)
+        fun onCloseBtnPressed()
+
     }
 }

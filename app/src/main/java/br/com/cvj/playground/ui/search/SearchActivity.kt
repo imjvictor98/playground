@@ -99,13 +99,18 @@ class SearchActivity : BaseActivity<ISearchContract.Presenter, ActivitySearchBin
         }
     }
 
-    override fun updateDropdown(cities: List<SearchCityItem>) {
+    override fun showResults(cities: List<SearchCityItem>) {
         mSearchSpinnerAdapter?.apply {
+            clear()
             addAll(cities)
             notifyDataSetChanged()
         }
 
         hideKeyboard()
+    }
+
+    override fun clearResults() {
+        mSearchSpinnerAdapter?.clear()
     }
 
     override fun showSpinner() {
