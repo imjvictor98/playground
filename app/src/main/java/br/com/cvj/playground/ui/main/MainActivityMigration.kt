@@ -29,7 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.PlaygroundTheme
+import br.com.cvj.playground.ui.widget.molecule.SearchableHeaderMolecule
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -60,6 +62,7 @@ fun MainScreen() {
     val tabData = getTabList()
     val pagerState = rememberPagerState(pageCount = tabData.size)
     Column(modifier = Modifier.fillMaxSize()) {
+        SearchableHeaderMolecule(text = "São Paulo, SP")
         TabLayout(tabData, pagerState)
         TabContent(tabData, pagerState)
     }
@@ -73,14 +76,11 @@ fun TabLayout(tabData: List<Pair<String, ImageVector>>, pagerState: PagerState) 
 
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        divider = {
-            Spacer(modifier =Modifier.height(5.dp))
-        },
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
                 height = 5.dp,
-                color = Color.White
+                color = Colors.Transparent
             )
         },
 
