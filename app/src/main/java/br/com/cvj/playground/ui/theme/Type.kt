@@ -20,6 +20,12 @@ val mazzardDmFamily = FontFamily(
 )
 
 val Typography = Typography(
+    labelMedium = TextStyle(
+        fontFamily = mazzardDmFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp,
+        lineHeight = 14.sp
+    ),
     bodyLarge = TextStyle(
         fontFamily = mazzardDmFamily,
         fontWeight = FontWeight.Normal,
