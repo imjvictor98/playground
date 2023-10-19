@@ -33,5 +33,15 @@ data class ResponseForecast(
 data class ForecastDTO(
     val current: WeatherCurrent? = null,
     val location: WeatherLocation? = null,
-    val forecastDay: ForecastDay? = null
-): Serializable
+    val forecastDay: ForecastDay? = null,
+): Serializable {
+    fun getConditionsForDay(): List<DayByTypeDTO> {
+        if (forecastDay?.day == null) return emptyList()
+
+        return listOf(
+            forecastDay.day.getDayByTypeDTO(DayByType.WIND),
+            forecastDay.day.getDayByTypeDTO(DayByType.HUMIDITY),
+            forecastDay.day.getDayByTypeDTO(DayByType.CHANCE_OF_RAIN)
+        )
+    }
+}

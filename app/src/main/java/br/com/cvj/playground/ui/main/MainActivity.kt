@@ -80,18 +80,18 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
     }
 
     override fun revealSearch() {
-        mBinding.activityMainSearch.apply {
-            visible()
-            setOnClickListener {
-                try {
-                    Intent(context, SearchActivity::class.java).apply {
-                        intentResultLauncher.launch(this)
-                    }
-                } catch (e: Exception) {
-                    e.message
-                }
-            }
-        }
+//        mBinding.activityMainSearch.apply {
+//            visible()
+//            setOnClickListener {
+//                try {
+//                    Intent(context, SearchActivity::class.java).apply {
+//                        intentResultLauncher.launch(this)
+//                    }
+//                } catch (e: Exception) {
+//                    e.message
+//                }
+//            }
+//        }
     }
 
     override fun displayLoading() {

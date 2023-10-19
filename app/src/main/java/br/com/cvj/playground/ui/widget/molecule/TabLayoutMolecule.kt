@@ -24,60 +24,62 @@ import br.com.cvj.playground.util.extension.pagerTabIndicatorOffset
 fun <T> TabLayoutMolecule(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    tabData: List<T>,
+    tabData: List<T>? = null,
     text: @Composable ((index: Int, tabItem: T) -> Unit)?,
     onClick: (index: Int, tabItem: T) -> Unit
 ) {
-    ScrollableTabRow(
-        containerColor = Colors.Transparent,
-        selectedTabIndex = pagerState.currentPage,
-        edgePadding = 0.dp,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                height = 5.dp,
-                color = Colors.Transparent
-            )
-        },
-        divider = {},
+    if (tabData?.isNotEmpty() == true) {
+        ScrollableTabRow(
+            containerColor = Colors.Transparent,
+            selectedTabIndex = pagerState.currentPage,
+            edgePadding = 0.dp,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                    height = 5.dp,
+                    color = Colors.Transparent
+                )
+            },
+            divider = {},
 
 
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .then(modifier)
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .then(modifier)
 
-    ) {
-        tabData.forEachIndexed { index, tabItem ->
-            TabAtom(
-                modifier = Modifier
-                    .drawBehind {
-                        if (pagerState.currentPage == index) {
-                            drawRoundRect(
-                                Colors.Salmon,
-                                Offset(0f, 0f),
-                                Size(size.width, size.height),
-                                CornerRadius(72f, 72f)
-                            )
-                            drawRoundRect(
-                                color = Colors.White,
-                                cornerRadius = CornerRadius(72f, 72f),
-                                style = Stroke(width = 2f),
-                            )
-                        } else {
-                            drawRoundRect(
-                                color = Colors.Gray600,
-                                cornerRadius = CornerRadius(72f, 72f),
-                                style = Stroke(width = 2f),
-                            )
+        ) {
+            tabData.forEachIndexed { index, tabItem ->
+                TabAtom(
+                    modifier = Modifier
+                        .drawBehind {
+                            if (pagerState.currentPage == index) {
+                                drawRoundRect(
+                                    Colors.Salmon,
+                                    Offset(0f, 0f),
+                                    Size(size.width, size.height),
+                                    CornerRadius(72f, 72f)
+                                )
+                                drawRoundRect(
+                                    color = Colors.White,
+                                    cornerRadius = CornerRadius(72f, 72f),
+                                    style = Stroke(width = 2f),
+                                )
+                            } else {
+                                drawRoundRect(
+                                    color = Colors.Gray600,
+                                    cornerRadius = CornerRadius(72f, 72f),
+                                    style = Stroke(width = 2f),
+                                )
+                            }
+
                         }
-
-                    }
-                    .padding(horizontal = 16.dp),
-                selected = pagerState.currentPage == index,
-                text = { text?.invoke(index, tabItem) },
-                onClick = { onClick(index, tabItem) }
-            )
+                        .padding(horizontal = 16.dp),
+                    selected = pagerState.currentPage == index,
+                    text = { text?.invoke(index, tabItem) },
+                    onClick = { onClick(index, tabItem) }
+                )
+            }
         }
     }
 }
