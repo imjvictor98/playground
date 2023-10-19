@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +15,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -24,6 +28,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -46,6 +52,7 @@ import br.com.cvj.playground.domain.model.forecast.DayByType
 import br.com.cvj.playground.domain.model.forecast.DayByTypeDTO
 import br.com.cvj.playground.domain.model.forecast.ForecastDTO
 import br.com.cvj.playground.domain.model.forecast.ForecastDay
+import br.com.cvj.playground.domain.model.forecast.Hour
 import br.com.cvj.playground.domain.model.weather.WeatherCurrent
 import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.hirukoProFamily
@@ -54,11 +61,16 @@ import br.com.cvj.playground.ui.widget.atom.TextTabAtom
 import br.com.cvj.playground.ui.widget.molecule.SearchableHeaderMolecule
 import br.com.cvj.playground.ui.widget.molecule.TabLayoutMolecule
 import br.com.cvj.playground.util.extension.applyScheme
+import br.com.cvj.playground.util.extension.format
+import br.com.cvj.playground.util.extension.getCurrentHourIndex
 import br.com.cvj.playground.util.extension.getDateForTab
+import br.com.cvj.playground.util.extension.isEqualsToCurrent
 import br.com.cvj.playground.util.helper.LocationHelper
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -71,6 +83,8 @@ fun HomeScreen(
     viewModel.initialize(ApiFactory.getWeatherServices(context))
 
     val homeUiState = viewModel.uiState.collectAsState()
+
+
 
 
     when (val state = homeUiState.value) {
@@ -127,11 +141,10 @@ fun TabLayout(forecasts: List<ForecastDTO>, pagerState: PagerState) {
     val scope = rememberCoroutineScope()
 
     TabLayoutMolecule(pagerState = pagerState, tabData = forecasts, text = { index, forecastItem ->
-        if (pagerState.currentPage == index) {
-            TextTabAtom(text = forecastItem.getDateForTab().toString(), textColor = Color.White)
-        } else {
-            TextTabAtom(text = forecastItem.getDateForTab().toString(), textColor = Colors.Gray100)
-        }
+        TextTabAtom(
+            text = forecastItem.getDateForTab().toString(),
+            textColor = if (pagerState.currentPage == index) Color.White else Colors.Gray100
+        )
     }, onClick = { index, _ ->
         scope.launch {
             pagerState.animateScrollToPage(index)
@@ -185,13 +198,81 @@ fun TabItem(forecast: ForecastDTO) {
                 Text(
                     modifier = Modifier.padding(top = 16.dp, end = 8.dp),
                     fontSize = 60.sp,
-                    fontFamily = hirukoProFamily,
-                    fontWeight = FontWeight.Bold,
+                    fontFamily = mazzardDmFamily,
+                    fontWeight = FontWeight.Normal,
                     color = Colors.White,
                     text = forecast.current?.tempC?.toInt().toString() + "°C"
                 )
             }
             TabResumeDayList(days = forecast.getConditionsForDay())
+        }
+        TabResumeHoursList(hours = forecast.forecastDay?.hour ?: emptyList())
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun TabResumeHoursList(hours: List<Hour>) {
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    var currentHour: Hour? = null
+
+    LazyRow(
+        state = listState,
+        contentPadding = PaddingValues(4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        items(hours) { hour ->
+            if (currentHour == null) {
+                currentHour = hour
+            }
+            Column(
+                modifier = Modifier
+                    .height(110.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .background(
+                        if (hour.time?.isEqualsToCurrent("HH") == true) Colors.Blue500 else Colors.Transparent,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(8.dp)
+                    ,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                GlideImage(
+                    modifier = Modifier,
+                    loading = placeholder(R.drawable.ic_placeholder_rainbow),
+                    failure = placeholder(R.drawable.ic_placeholder_rainbow),
+                    model = hour.condition?.icon?.applyScheme()?.replace("64", "128"),
+                    contentDescription = ""
+                )
+                Text(
+                    modifier = Modifier.padding(top = 6.dp),
+                    text = hour.tempC?.toInt().toString() + "°C",
+                    fontSize = 12.sp,
+                    fontFamily = mazzardDmFamily,
+                    fontWeight = FontWeight.Normal,
+                    color = Colors.White
+                )
+                Text(
+                    modifier = Modifier.padding(top = 12.dp),
+                    text = hour.time?.format("HH:mm").toString(),
+                    fontSize = 14.sp,
+                    fontFamily = hirukoProFamily,
+                    fontWeight = FontWeight.Normal,
+                    color = Colors.White
+                )
+            }
+
+        }
+    }
+
+    LaunchedEffect(key1 = "Trying to get current hour") {
+        coroutineScope.launch {
+            val currentIndex = currentHour?.getCurrentHourIndex(hours)
+            if (currentIndex != -1 && currentIndex != null) {
+                listState.scrollToItem(currentIndex)
+            }
         }
     }
 }
@@ -201,7 +282,7 @@ fun TabResumeDayList(days: List<DayByTypeDTO>) {
     LazyVerticalGrid(
         modifier = Modifier.padding(horizontal = 4.dp),
         columns = GridCells.Fixed(3),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(4.dp)
     ) {
         items(days) { currentDay ->
@@ -210,8 +291,7 @@ fun TabResumeDayList(days: List<DayByTypeDTO>) {
                     .height(100.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(Colors.Blue950)
-                    .padding(16.dp)
-                    ,
+                    .padding(16.dp),
 
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally

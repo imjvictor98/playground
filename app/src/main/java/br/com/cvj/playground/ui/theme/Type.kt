@@ -37,7 +37,7 @@ val Typography = Typography(
         fontFamily = mazzardDmFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 32.sp,
-        lineHeight = 28.sp,
+        lineHeight = 34.sp,
         letterSpacing = 0.96.sp
     )
 )

@@ -73,8 +73,7 @@ fun <T> TabLayoutMolecule(
                                 )
                             }
 
-                        }
-                        .padding(horizontal = 16.dp),
+                        },
                     selected = pagerState.currentPage == index,
                     text = { text?.invoke(index, tabItem) },
                     onClick = { onClick(index, tabItem) }

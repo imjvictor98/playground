@@ -1,8 +1,12 @@
 package br.com.cvj.playground.ui.home
 
 import android.location.Location
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import br.com.cvj.playground.data.network.IWeatherServices
+import br.com.cvj.playground.domain.model.forecast.Hour
 import br.com.cvj.playground.util.extension.getLatLongAsString
 import com.haroldadmin.cnradapter.NetworkResponse
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +25,6 @@ class HomeViewModel : ViewModel() {
 
     val uiState: StateFlow<HomeUiState> =
         _uiState.asStateFlow()
-
 
     private var mWeatherCall: Job? = null
 
