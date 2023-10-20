@@ -1,5 +1,6 @@
 package br.com.cvj.playground.ui.home
 
+import android.annotation.SuppressLint
 import android.location.Location
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -29,14 +30,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,12 +50,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.cvj.playground.R
 import br.com.cvj.playground.data.network.ApiFactory
 import br.com.cvj.playground.domain.model.forecast.Day
-import br.com.cvj.playground.domain.model.forecast.DayByType
 import br.com.cvj.playground.domain.model.forecast.DayByTypeDTO
 import br.com.cvj.playground.domain.model.forecast.ForecastDTO
 import br.com.cvj.playground.domain.model.forecast.ForecastDay
 import br.com.cvj.playground.domain.model.forecast.Hour
 import br.com.cvj.playground.domain.model.weather.WeatherCurrent
+import br.com.cvj.playground.ui.search.BottomSheetSearch
 import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.hirukoProFamily
 import br.com.cvj.playground.ui.theme.mazzardDmFamily
@@ -67,6 +71,7 @@ import br.com.cvj.playground.util.extension.isSameDay
 import br.com.cvj.playground.util.helper.LocationHelper
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.Placeholder
 import com.bumptech.glide.integration.compose.placeholder
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -81,6 +86,9 @@ fun HomeScreen(
     viewModel.initialize(ApiFactory.getWeatherServices(context))
 
     val homeUiState = viewModel.uiState.collectAsState()
+    var showBottomSheetSearch by remember {
+        mutableStateOf(false)
+    }
 
     when (val state = homeUiState.value) {
         is HomeUiState.IsLoading -> {
@@ -103,12 +111,21 @@ fun HomeScreen(
                     .background(Colors.Black100)
             ) {
                 SearchableHeaderMolecule(
+                    modifier = Modifier.padding(16.dp),
                     text = state.weatherLocation.getRegionFormatted(),
-                    modifier = Modifier.padding(16.dp)
+                    onClick = {
+                        showBottomSheetSearch = true
+                    }
                 )
                 TabLayout(state.forecasts, pagerState)
                 TabContent(state.forecasts, pagerState)
             }
+        }
+    }
+
+    if (showBottomSheetSearch) {
+        BottomSheetSearch {
+            showBottomSheetSearch = false
         }
     }
 
@@ -132,7 +149,6 @@ fun HomeScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TabLayout(forecasts: List<ForecastDTO>, pagerState: PagerState) {
-
     val scope = rememberCoroutineScope()
 
     TabLayoutMolecule(pagerState = pagerState, tabData = forecasts, text = { index, forecastItem ->
@@ -146,7 +162,6 @@ fun TabLayout(forecasts: List<ForecastDTO>, pagerState: PagerState) {
         }
     })
 }
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -199,9 +214,9 @@ fun TabItem(forecast: ForecastDTO) {
                     text = forecast.current?.tempC?.toInt().toString() + "°C"
                 )
             }
-            TabResumeDayList(days = forecast.getConditionsForDay())
+            TabResumeDayStatusList(days = forecast.getConditionsForDay())
         }
-        TabResumeHoursList(
+        TabResumeHoursStatusList(
             hours = forecast.forecastDay?.hour ?: emptyList(),
             forecast.forecastDay?.date.toString()
         )
@@ -210,10 +225,38 @@ fun TabItem(forecast: ForecastDTO) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun TabResumeHoursList(hours: List<Hour>, dateAsString: String) {
+fun TabResumeDayStatusList(days: List<DayByTypeDTO>) {
+    LazyVerticalGrid(
+        modifier = Modifier.padding(horizontal = 4.dp),
+        columns = GridCells.Fixed(3),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(4.dp)
+    ) {
+        items(days) { currentDay ->
+            TabResumeStatus(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Colors.Blue950)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                icon = currentDay.getProviderResources().getIcon(),
+                text = currentDay.getProviderResources().getTitle(),
+                textModifier = Modifier.padding(top = 6.dp),
+                description = currentDay.getProviderResources().getDescription(),
+                descriptionModifier = Modifier.padding(top = 6.dp)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun TabResumeHoursStatusList(hours: List<Hour>, dateAsString: String) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     var currentHour: Hour? = null
+    val nowTime = Date()
 
     LazyRow(
         state = listState,
@@ -225,9 +268,8 @@ fun TabResumeHoursList(hours: List<Hour>, dateAsString: String) {
             if (currentHour == null && Date().isSameDay(dateAsString)) {
                 currentHour = hour
             }
-            Column(
+            TabResumeStatus(
                 modifier = Modifier
-                    .height(110.dp)
                     .padding(horizontal = 8.dp, vertical = 2.dp)
                     .background(
                         if (hour.time?.isEqualsToCurrent("HH") == true && Date().isSameDay(
@@ -237,33 +279,19 @@ fun TabResumeHoursList(hours: List<Hour>, dateAsString: String) {
                         shape = RoundedCornerShape(8.dp)
                     )
                     .padding(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                GlideImage(
-                    modifier = Modifier,
-                    loading = placeholder(R.drawable.ic_placeholder_rainbow),
-                    failure = placeholder(R.drawable.ic_placeholder_rainbow),
-                    model = hour.condition?.icon?.applyScheme()?.replace("64", "128"),
-                    contentDescription = ""
-                )
-                Text(
-                    modifier = Modifier.padding(top = 6.dp),
-                    text = hour.tempC?.toInt().toString() + "°C",
-                    fontSize = 12.sp,
-                    fontFamily = mazzardDmFamily,
-                    fontWeight = FontWeight.Normal,
-                    color = Colors.White
-                )
-                Text(
-                    modifier = Modifier.padding(top = 12.dp),
-                    text = hour.time?.format("HH:mm").toString(),
-                    fontSize = 14.sp,
-                    fontFamily = hirukoProFamily,
-                    fontWeight = FontWeight.Normal,
-                    color = Colors.White
-                )
-            }
-
+                placeholderImage = placeholder(R.drawable.ic_placeholder_rainbow),
+                failureImage = placeholder(R.drawable.ic_placeholder_rainbow),
+                url = hour.condition?.icon?.applyScheme()?.replace("64", "128"),
+                text = hour.tempC?.toInt().toString() + "°C" ,
+                textModifier = Modifier.padding(top = 6.dp),
+                description = if (hour.time?.format("HH") == nowTime.format("HH") && Date().isSameDay(
+                        dateAsString
+                    )
+                ) stringResource(id = R.string.now) else hour.time?.format(
+                    "HH:mm"
+                ).toString(),
+                descriptionModifier = Modifier.padding(top = 12.dp)
+            )
         }
     }
 
@@ -277,90 +305,58 @@ fun TabResumeHoursList(hours: List<Hour>, dateAsString: String) {
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
+@SuppressLint("ModifierParameter")
 @Composable
-fun TabResumeDayList(days: List<DayByTypeDTO>) {
-    LazyVerticalGrid(
-        modifier = Modifier.padding(horizontal = 4.dp),
-        columns = GridCells.Fixed(3),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(4.dp)
-    ) {
-        items(days) { currentDay ->
-            Column(
-                modifier = Modifier
-                    .height(100.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Colors.Blue950)
-                    .padding(16.dp),
-
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                when (currentDay.type) {
-                    DayByType.WIND -> {
-                        TabResumeDayItem(
-                            weatherDayIcon = painterResource(id = R.drawable.ic_wind_18dp_blue),
-                            weatherDayTitle = stringResource(id = R.string.weather_resume_wind),
-                            weatherDayDescription = stringResource(
-                                id = R.string.string_format_kmh,
-                                currentDay.day.maxwindKph?.toInt().toString()
-                            )
-                        )
-                    }
-
-                    DayByType.HUMIDITY -> {
-                        TabResumeDayItem(
-                            weatherDayIcon = painterResource(id = R.drawable.ic_humidity_18dp_blue),
-                            weatherDayTitle = stringResource(id = R.string.weather_resume_humidity),
-                            weatherDayDescription = stringResource(
-                                id = R.string.string_format_percent,
-                                currentDay.day.avghumidity?.toInt().toString()
-                            )
-                        )
-                    }
-
-                    DayByType.CHANCE_OF_RAIN -> {
-                        TabResumeDayItem(
-                            weatherDayIcon = painterResource(id = R.drawable.ic_chance_rain_18dp_blue),
-                            weatherDayTitle = stringResource(id = R.string.weather_resume_chance_of_rain),
-                            weatherDayDescription = stringResource(
-                                id = R.string.string_format_percent,
-                                currentDay.day.dailyChanceOfRain.toString()
-                            )
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun TabResumeDayItem(
-    weatherDayIcon: Painter,
-    weatherDayTitle: String,
-    weatherDayDescription: String,
+fun TabResumeStatus(
+    modifier: Modifier = Modifier,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    placeholderImage: Placeholder? = null,
+    failureImage: Placeholder? = null,
+    url: String? = null,
+    icon: Painter? = null,
+    text: String, textModifier: Modifier,
+    description: String,
+    descriptionModifier: Modifier,
 ) {
-    Image(
-        painter = weatherDayIcon,
-        contentDescription = ""
-    )
-    Text(
-        modifier = Modifier.padding(top = 6.dp),
-        text = weatherDayTitle,
-        fontSize = 12.sp,
-        fontFamily = mazzardDmFamily,
-        fontWeight = FontWeight.Normal,
-        color = Colors.White
-    )
-    Text(
-        modifier = Modifier.padding(top = 6.dp),
-        text = weatherDayDescription,
-        fontSize = 14.sp,
-        fontFamily = hirukoProFamily,
-        fontWeight = FontWeight.Normal,
-        color = Colors.White
-    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment
+    ) {
+        if (url != null) {
+            GlideImage(
+                loading = placeholderImage,
+                failure = failureImage,
+                model = url,
+                contentDescription = ""
+            )
+        } else if (icon != null) {
+            Image(
+                painter = icon,
+                contentDescription = ""
+            )
+        }
+
+        Text(
+            modifier = textModifier,
+            text = text,
+            fontSize = 12.sp,
+            fontFamily = mazzardDmFamily,
+            fontWeight = FontWeight.Normal,
+            color = Colors.White
+        )
+
+        Text(
+            modifier = descriptionModifier,
+            text = description,
+            fontSize = 14.sp,
+            fontFamily = hirukoProFamily,
+            fontWeight = FontWeight.Normal,
+            color = Colors.White
+        )
+    }
 }
 
 @Composable

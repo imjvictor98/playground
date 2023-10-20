@@ -19,6 +19,7 @@ fun TitleAtom(modifier: Modifier = Modifier, text: String, textColor: Color = Co
         text = text,
         fontFamily = Typography.titleLarge.fontFamily,
         fontSize = Typography.titleLarge.fontSize,
+        lineHeight = TextUnit(34F, TextUnitType.Sp),
         color = textColor
     )
 }
@@ -26,5 +27,5 @@ fun TitleAtom(modifier: Modifier = Modifier, text: String, textColor: Color = Co
 @Composable
 @Preview(showBackground = true, backgroundColor = 0x333)
 fun TitleAtomPreview() {
-    TitleAtom(text = "Hello, world", modifier = Modifier.padding(16.dp))
+    TitleAtom(text = "Hello, \nworld", modifier = Modifier.padding(16.dp))
 }

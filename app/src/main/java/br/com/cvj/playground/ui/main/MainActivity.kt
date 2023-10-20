@@ -16,8 +16,6 @@ import br.com.cvj.playground.domain.model.forecast.ForecastDTO
 import br.com.cvj.playground.domain.model.search.SearchCityItem
 import br.com.cvj.playground.ui.base.BaseActivity
 import br.com.cvj.playground.ui.permission.location.PermissionLocationActivity
-import br.com.cvj.playground.ui.search.SearchActivity
-import br.com.cvj.playground.ui.weather.resume.WeatherResumeFragment
 import br.com.cvj.playground.util.extension.DateCalendar
 import br.com.cvj.playground.util.extension.getByCalendar
 import br.com.cvj.playground.util.extension.getDate
@@ -158,7 +156,7 @@ class MainActivity : BaseActivity<IMainContract.Presenter, ActivityMainBinding>(
         }
 
         override fun createFragment(position: Int): Fragment {
-            return WeatherResumeFragment.getInstance(forecasts[position])
+            return Fragment()
         }
     }
 }

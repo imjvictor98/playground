@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import okio.IOException
+import timber.log.Timber
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.net.URL
@@ -25,7 +26,7 @@ fun String.toBitMap(): Bitmap? {
         bis.close()
         `is`.close()
     } catch (e: IOException) {
-        Log.e("Error load bitmap", "Error getting bitmap", e)
+        Timber.e("Error load bitmap", "Error getting bitmap", e)
     }
     return bm
 }
