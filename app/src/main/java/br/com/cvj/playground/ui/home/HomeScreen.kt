@@ -4,7 +4,6 @@ import android.location.Location
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -65,14 +63,14 @@ import br.com.cvj.playground.util.extension.format
 import br.com.cvj.playground.util.extension.getCurrentHourIndex
 import br.com.cvj.playground.util.extension.getDateForTab
 import br.com.cvj.playground.util.extension.isEqualsToCurrent
+import br.com.cvj.playground.util.extension.isSameDay
 import br.com.cvj.playground.util.helper.LocationHelper
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Date
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -83,9 +81,6 @@ fun HomeScreen(
     viewModel.initialize(ApiFactory.getWeatherServices(context))
 
     val homeUiState = viewModel.uiState.collectAsState()
-
-
-
 
     when (val state = homeUiState.value) {
         is HomeUiState.IsLoading -> {
@@ -206,13 +201,16 @@ fun TabItem(forecast: ForecastDTO) {
             }
             TabResumeDayList(days = forecast.getConditionsForDay())
         }
-        TabResumeHoursList(hours = forecast.forecastDay?.hour ?: emptyList())
+        TabResumeHoursList(
+            hours = forecast.forecastDay?.hour ?: emptyList(),
+            forecast.forecastDay?.date.toString()
+        )
     }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun TabResumeHoursList(hours: List<Hour>) {
+fun TabResumeHoursList(hours: List<Hour>, dateAsString: String) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     var currentHour: Hour? = null
@@ -224,7 +222,7 @@ fun TabResumeHoursList(hours: List<Hour>) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         items(hours) { hour ->
-            if (currentHour == null) {
+            if (currentHour == null && Date().isSameDay(dateAsString)) {
                 currentHour = hour
             }
             Column(
@@ -232,11 +230,13 @@ fun TabResumeHoursList(hours: List<Hour>) {
                     .height(110.dp)
                     .padding(horizontal = 8.dp, vertical = 2.dp)
                     .background(
-                        if (hour.time?.isEqualsToCurrent("HH") == true) Colors.Blue500 else Colors.Transparent,
+                        if (hour.time?.isEqualsToCurrent("HH") == true && Date().isSameDay(
+                                dateAsString
+                            )
+                        ) Colors.Blue500 else Colors.Transparent,
                         shape = RoundedCornerShape(8.dp)
                     )
-                    .padding(8.dp)
-                    ,
+                    .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 GlideImage(
