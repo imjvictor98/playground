@@ -1,7 +1,7 @@
 package br.com.cvj.playground.ui.main
 
 import android.location.Location
-import br.com.cvj.playground.data.network.IWeatherServices
+import br.com.cvj.playground.data.repository.weather.IWeatherServices
 import br.com.cvj.playground.util.extension.getLatLongAsString
 import com.haroldadmin.cnradapter.NetworkResponse
 import kotlinx.coroutines.CoroutineScope

@@ -1,6 +1,7 @@
 package br.com.cvj.playground.domain.model.search
 
 
+import android.location.Location
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.io.Serializable
@@ -18,5 +19,12 @@ data class SearchCityItem(
 ): Serializable {
     override fun toString(): String {
         return "${name}, $country"
+    }
+}
+
+fun SearchCityItem.toLocation(): Location {
+    return Location("").also {
+        it.latitude = lat.toDouble()
+        it.longitude = lng.toDouble()
     }
 }

@@ -1,7 +1,10 @@
 package br.com.cvj.playground.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.location.Location
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,7 +15,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -29,12 +31,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,18 +45,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.cvj.playground.R
 import br.com.cvj.playground.data.network.ApiFactory
+import br.com.cvj.playground.data.repository.weather.WeatherRepository
 import br.com.cvj.playground.domain.model.forecast.Day
 import br.com.cvj.playground.domain.model.forecast.DayByTypeDTO
 import br.com.cvj.playground.domain.model.forecast.ForecastDTO
 import br.com.cvj.playground.domain.model.forecast.ForecastDay
 import br.com.cvj.playground.domain.model.forecast.Hour
+import br.com.cvj.playground.domain.model.search.SearchCityItem
+import br.com.cvj.playground.domain.model.search.toLocation
 import br.com.cvj.playground.domain.model.weather.WeatherCurrent
-import br.com.cvj.playground.ui.search.BottomSheetSearch
+import br.com.cvj.playground.ui.main.MainActivity
+import br.com.cvj.playground.ui.search2.Search2Activity
 import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.hirukoProFamily
 import br.com.cvj.playground.ui.theme.mazzardDmFamily
@@ -68,6 +74,7 @@ import br.com.cvj.playground.util.extension.getCurrentHourIndex
 import br.com.cvj.playground.util.extension.getDateForTab
 import br.com.cvj.playground.util.extension.isEqualsToCurrent
 import br.com.cvj.playground.util.extension.isSameDay
+import br.com.cvj.playground.util.extension.serializable
 import br.com.cvj.playground.util.helper.LocationHelper
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -80,15 +87,34 @@ import java.util.Date
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(
+        factory = HomeViewModel.Factory(
+            WeatherRepository(ApiFactory.getWeatherServices(LocalContext.current.applicationContext))
+        )
+    )
 ) {
     val context = LocalContext.current
-    viewModel.initialize(ApiFactory.getWeatherServices(context))
 
     val homeUiState = viewModel.uiState.collectAsState()
-    var showBottomSheetSearch by remember {
-        mutableStateOf(false)
+
+    val extraCityItem: MutableState<SearchCityItem?> = remember {
+        mutableStateOf(null)
     }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result ->
+            if (result.resultCode == MainActivity.EXTRA_CITY_ITEM_RESULT_CODE) {
+                val resultValue: SearchCityItem? = result.data?.extras?.serializable(
+                    MainActivity.EXTRA_CITY_ITEM
+                )
+
+                resultValue?.let {
+                    extraCityItem.value = it
+                }
+            }
+        }
+    )
 
     when (val state = homeUiState.value) {
         is HomeUiState.IsLoading -> {
@@ -114,7 +140,9 @@ fun HomeScreen(
                     modifier = Modifier.padding(16.dp),
                     text = state.weatherLocation.getRegionFormatted(),
                     onClick = {
-                        showBottomSheetSearch = true
+                        Intent(context, Search2Activity::class.java).also {
+                            launcher.launch(it)
+                        }
                     }
                 )
                 TabLayout(state.forecasts, pagerState)
@@ -123,26 +151,27 @@ fun HomeScreen(
         }
     }
 
-    if (showBottomSheetSearch) {
-        BottomSheetSearch {
-            showBottomSheetSearch = false
-        }
+
+    if (extraCityItem.value != null) {
+        viewModel.requestForecast(extraCityItem.value!!.toLocation())
+    } else {
+        LocationHelper.getLastLocation(
+            context,
+            object : LocationHelper.LocationAvailabilityListener {
+                override fun onSuccess(location: Location) {
+                    viewModel.requestForecast(location)
+                }
+
+                override fun onFailure() {
+                    Timber.d("Location failed")
+                    //do nothing for while
+                }
+
+                override fun onError(exception: Exception) {
+                    Timber.e(exception)
+                }
+            })
     }
-
-    LocationHelper.getLastLocation(context, object : LocationHelper.LocationAvailabilityListener {
-        override fun onSuccess(location: Location) {
-            viewModel.requestForecast(location)
-        }
-
-        override fun onFailure() {
-            Timber.d("Location failed")
-            //do nothing for while
-        }
-
-        override fun onError(exception: Exception) {
-            Timber.e(exception)
-        }
-    })
 
 }
 
@@ -281,8 +310,9 @@ fun TabResumeHoursStatusList(hours: List<Hour>, dateAsString: String) {
                     .padding(8.dp),
                 placeholderImage = placeholder(R.drawable.ic_placeholder_rainbow),
                 failureImage = placeholder(R.drawable.ic_placeholder_rainbow),
+                glideImageSize = 24.dp,
                 url = hour.condition?.icon?.applyScheme()?.replace("64", "128"),
-                text = hour.tempC?.toInt().toString() + "°C" ,
+                text = hour.tempC?.toInt().toString() + "°C",
                 textModifier = Modifier.padding(top = 6.dp),
                 description = if (hour.time?.format("HH") == nowTime.format("HH") && Date().isSameDay(
                         dateAsString
@@ -314,6 +344,7 @@ fun TabResumeStatus(
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     placeholderImage: Placeholder? = null,
     failureImage: Placeholder? = null,
+    glideImageSize: Dp? = null,
     url: String? = null,
     icon: Painter? = null,
     text: String, textModifier: Modifier,
@@ -327,6 +358,7 @@ fun TabResumeStatus(
     ) {
         if (url != null) {
             GlideImage(
+                modifier = if (glideImageSize != null) Modifier.size(glideImageSize) else Modifier,
                 loading = placeholderImage,
                 failure = failureImage,
                 model = url,

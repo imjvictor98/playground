@@ -2,7 +2,8 @@ package br.com.cvj.playground.data.network
 
 import android.content.Context
 import br.com.cvj.playground.R
-import br.com.cvj.playground.data.repository.search.SearchCountriesApi
+import br.com.cvj.playground.data.repository.search.ISearchCountriesApi
+import br.com.cvj.playground.data.repository.weather.IWeatherServices
 import br.com.cvj.playground.util.helper.MoshiHelper
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import okhttp3.OkHttpClient
@@ -49,7 +50,7 @@ object ApiFactory {
             .create(IWeatherServices::class.java)
     }
 
-    fun getSearchCountriesServices(context: Context): SearchCountriesApi {
+    fun getSearchCountriesServices(context: Context): ISearchCountriesApi {
         val httpClient = OkHttpClient.Builder()
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
@@ -62,7 +63,7 @@ object ApiFactory {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(httpClient.build())
             .build()
-            .create(SearchCountriesApi::class.java)
+            .create(ISearchCountriesApi::class.java)
     }
 }
 

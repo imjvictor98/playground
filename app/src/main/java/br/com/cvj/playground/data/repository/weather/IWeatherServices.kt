@@ -1,4 +1,4 @@
-package br.com.cvj.playground.data.network
+package br.com.cvj.playground.data.repository.weather
 
 import br.com.cvj.playground.domain.model.forecast.ResponseForecast
 import br.com.cvj.playground.domain.model.BaseModel

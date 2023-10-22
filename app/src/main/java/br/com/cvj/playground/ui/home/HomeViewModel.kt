@@ -1,42 +1,30 @@
 package br.com.cvj.playground.ui.home
 
 import android.location.Location
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import br.com.cvj.playground.data.network.IWeatherServices
-import br.com.cvj.playground.domain.model.forecast.Hour
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import br.com.cvj.playground.data.repository.weather.WeatherRepository
 import br.com.cvj.playground.util.extension.getLatLongAsString
 import com.haroldadmin.cnradapter.NetworkResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
-    private lateinit var mWeatherServices: IWeatherServices
-
+class HomeViewModel(private val repository: WeatherRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<HomeUiState> =
         MutableStateFlow(HomeUiState.IsLoading())
 
     val uiState: StateFlow<HomeUiState> =
         _uiState.asStateFlow()
 
-    private var mWeatherCall: Job? = null
-
-    fun initialize(weatherServices: IWeatherServices) {
-        mWeatherServices = weatherServices
-    }
 
     fun requestForecast(location: Location? = null) {
         if (location != null) {
-            mWeatherCall = CoroutineScope(Dispatchers.Main).launch {
+            viewModelScope.launch {
                 val latLong = location.getLatLongAsString()
-                when (val response = mWeatherServices.getForecastToday(latLong)) {
+                when (val response = repository.getForecastToday(latLong)) {
                     is NetworkResponse.Success -> {
                         response.body.location?.let {
                             _uiState.value = HomeUiState.IsLoading(false)
@@ -53,13 +41,16 @@ class HomeViewModel : ViewModel() {
                 }
 
             }
-            mWeatherCall?.invokeOnCompletion {
-//                mView.hideLoading()
-            }
         } else {
             //do nothing
         }
     }
 
+    class Factory(private val repository: WeatherRepository):
+    ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return HomeViewModel(repository) as T
+        }
+    }
 
 }

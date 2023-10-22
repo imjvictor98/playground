@@ -2,12 +2,8 @@ package br.com.cvj.playground.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import android.widget.TextView
 import br.com.cvj.playground.R
-import br.com.cvj.playground.data.repository.search.SearchCountriesApi
 import br.com.cvj.playground.data.repository.search.SearchCountriesDataSource
 import br.com.cvj.playground.data.repository.search.SearchCountriesRaw
 import br.com.cvj.playground.data.repository.search.SearchCountriesRepository
@@ -35,13 +31,13 @@ class FooActivity : AppCompatActivity() {
 
 
     private fun firstWay() {
-        thread {
-            val weather = repository.fetchCountriesBy("Taguatinga")
-            val weatherFirst = weather?.first()
-            runOnUiThread {
-                textView.text = weatherFirst?.name
-            }
-        }
+//        thread {
+//            val weather = repository.fetchCountriesBy("Taguatinga")
+//            val weatherFirst = weather?.first()
+//            runOnUiThread {
+//                textView.text = weatherFirst?.name
+//            }
+//        }
     }
 
     private fun callbackWay() {
