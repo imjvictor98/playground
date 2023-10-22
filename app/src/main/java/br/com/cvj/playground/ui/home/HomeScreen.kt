@@ -61,7 +61,7 @@ import br.com.cvj.playground.domain.model.search.SearchCityItem
 import br.com.cvj.playground.domain.model.search.toLocation
 import br.com.cvj.playground.domain.model.weather.WeatherCurrent
 import br.com.cvj.playground.ui.main.MainActivity
-import br.com.cvj.playground.ui.search2.Search2Activity
+import br.com.cvj.playground.ui.search.SearchActivity
 import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.hirukoProFamily
 import br.com.cvj.playground.ui.theme.mazzardDmFamily
@@ -140,7 +140,7 @@ fun HomeScreen(
                     modifier = Modifier.padding(16.dp),
                     text = state.weatherLocation.getRegionFormatted(),
                     onClick = {
-                        Intent(context, Search2Activity::class.java).also {
+                        Intent(context, SearchActivity::class.java).also {
                             launcher.launch(it)
                         }
                     }

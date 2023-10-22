@@ -42,7 +42,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".ui.search2.Search2Activity"
+            android:name=".ui.search.SearchActivity"
             android:exported="true"
             android:theme="@style/Theme.Playground" />
         <activity

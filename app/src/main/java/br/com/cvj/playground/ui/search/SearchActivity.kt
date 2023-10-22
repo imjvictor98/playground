@@ -1,4 +1,4 @@
-package br.com.cvj.playground.ui.search2
+package br.com.cvj.playground.ui.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -40,7 +40,7 @@ import br.com.cvj.playground.ui.main.MainActivity
 import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.PlaygroundTheme
 
-class Search2Activity : ComponentActivity() {
+class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

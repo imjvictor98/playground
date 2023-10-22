@@ -1,4 +1,4 @@
-package br.com.cvj.playground.ui.search2
+package br.com.cvj.playground.ui.search
 
 import br.com.cvj.playground.domain.model.search.SearchCityItem
 

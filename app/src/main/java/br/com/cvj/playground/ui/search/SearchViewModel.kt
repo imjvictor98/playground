@@ -1,4 +1,4 @@
-package br.com.cvj.playground.ui.search2
+package br.com.cvj.playground.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
