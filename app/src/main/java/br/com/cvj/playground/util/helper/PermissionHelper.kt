@@ -31,6 +31,10 @@ object PermissionHelper {
                 context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
+    fun isLocationPermissions(permissions: Map<String, @JvmSuppressWildcards Boolean>): Boolean {
+        return permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION) ||
+                permissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION)
+    }
 
     fun checkLocationPermissionsAllowed(
         permissions: Array<out String>,

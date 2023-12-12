@@ -1,5 +1,7 @@
 package br.com.cvj.playground.ui.widget.organism
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,6 +27,9 @@ import br.com.cvj.playground.ui.widget.molecule.ButtonMolecule
 @Composable
 fun RequestLocationOrganism(
     modifier: Modifier = Modifier,
+    @StringRes description: Int,
+    @DrawableRes image: Int,
+    @StringRes btnText: Int = R.string.activity_permission_request_btn,
     onClick: () -> Unit
 ) {
 
@@ -48,7 +53,7 @@ fun RequestLocationOrganism(
                 .width(128.dp)
                 .height(128.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.img_location),
+                painter = painterResource(id = image),
                 contentDescription = "",
             )
         }
@@ -62,8 +67,9 @@ fun RequestLocationOrganism(
                     bottom.linkTo(button.top)
                 }
                 .padding(top = 16.dp),
-            text = stringResource(id = R.string.activity_permission_location_info_text)
+            text = stringResource(id = description)
         )
+
         ButtonMolecule(
             modifier = Modifier
                 .constrainAs(button) {
@@ -73,7 +79,7 @@ fun RequestLocationOrganism(
 
                 }
                 .fillMaxWidth(),
-            text = stringResource(id = R.string.activity_permission_location_request_btn),
+            text = stringResource(id = btnText),
             onClick = onClick
         )
     }
@@ -85,6 +91,19 @@ fun RequestLocationOrganism(
 @Preview
 fun RequestLocationOrganismPreview() {
     RequestLocationOrganism(
+        description = R.string.activity_permission_location_info_text,
+        image = R.drawable.img_location,
+        btnText = R.string.activity_permission_location_request_btn,
+        onClick = {}
+    )
+}
+
+@Composable
+@Preview
+fun RequestPhoneOrganismPreview() {
+    RequestLocationOrganism(
+        description = R.string.activity_permission_phone_info_text,
+        image = R.drawable.img_phone_permission,
         onClick = {}
     )
 }

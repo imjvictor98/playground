@@ -36,7 +36,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.cvj.playground.data.repository.search.SearchCountriesDataSource
 import br.com.cvj.playground.data.repository.search.SearchCountriesRaw
 import br.com.cvj.playground.data.repository.search.SearchCountriesRepository
-import br.com.cvj.playground.ui.main.MainActivity
+import br.com.cvj.playground.ui.home.HomeActivity.Companion.EXTRA_CITY_ITEM
+import br.com.cvj.playground.ui.home.HomeActivity.Companion.EXTRA_CITY_ITEM_RESULT_CODE
 import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.PlaygroundTheme
 
@@ -106,8 +107,8 @@ class SearchActivity : ComponentActivity() {
                             Row(
                                 modifier = Modifier.fillMaxWidth().clickable {
                                     Intent().also { intent ->
-                                        intent.putExtra(MainActivity.EXTRA_CITY_ITEM, it)
-                                        setResult(MainActivity.EXTRA_CITY_ITEM_RESULT_CODE, intent)
+                                        intent.putExtra(EXTRA_CITY_ITEM, it)
+                                        setResult(EXTRA_CITY_ITEM_RESULT_CODE, intent)
                                         finish()
                                     }
                                 },

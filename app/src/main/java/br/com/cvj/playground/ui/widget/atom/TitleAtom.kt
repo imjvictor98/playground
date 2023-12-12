@@ -13,12 +13,17 @@ import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.Typography
 
 @Composable
-fun TitleAtom(modifier: Modifier = Modifier, text: String, textColor: Color = Colors.White, ) {
+fun TitleAtom(
+    modifier: Modifier = Modifier,
+    text: String,
+    textColor: Color = Colors.White,
+    fontSize: TextUnit = Typography.titleLarge.fontSize,
+) {
     Text(
         modifier = modifier,
         text = text,
         fontFamily = Typography.titleLarge.fontFamily,
-        fontSize = Typography.titleLarge.fontSize,
+        fontSize = fontSize,
         lineHeight = TextUnit(34F, TextUnitType.Sp),
         color = textColor
     )

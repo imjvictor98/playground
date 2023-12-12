@@ -27,6 +27,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,7 +61,7 @@ import br.com.cvj.playground.domain.model.forecast.Hour
 import br.com.cvj.playground.domain.model.search.SearchCityItem
 import br.com.cvj.playground.domain.model.search.toLocation
 import br.com.cvj.playground.domain.model.weather.WeatherCurrent
-import br.com.cvj.playground.ui.main.MainActivity
+import br.com.cvj.playground.ui.location.LocationActivity
 import br.com.cvj.playground.ui.search.SearchActivity
 import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.hirukoProFamily
@@ -104,9 +105,9 @@ fun HomeScreen(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
-            if (result.resultCode == MainActivity.EXTRA_CITY_ITEM_RESULT_CODE) {
+            if (result.resultCode == HomeActivity.EXTRA_CITY_ITEM_RESULT_CODE) {
                 val resultValue: SearchCityItem? = result.data?.extras?.serializable(
-                    MainActivity.EXTRA_CITY_ITEM
+                    HomeActivity.EXTRA_CITY_ITEM
                 )
 
                 resultValue?.let {
@@ -145,12 +146,19 @@ fun HomeScreen(
                         }
                     }
                 )
+                Button(onClick = {
+                    LocationActivity.startActivity(context, Location("").apply {
+                        latitude = state.weatherLocation.lat ?: 0.0
+                        longitude = state.weatherLocation.lon ?: 0.0
+                    })
+                }) {
+                    Text("Testar Maps")
+                }
                 TabLayout(state.forecasts, pagerState)
                 TabContent(state.forecasts, pagerState)
             }
         }
     }
-
 
     if (extraCityItem.value != null) {
         viewModel.requestForecast(extraCityItem.value!!.toLocation())

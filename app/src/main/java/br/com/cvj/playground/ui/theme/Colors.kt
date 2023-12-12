@@ -18,8 +18,12 @@ object Colors {
     val Blue700= Color(0xFF3571B6)
     val Blue600= Color(0xFF3D8AE9)
     val Blue500= Color(0xFF3A8CEA)
+    val Gray= Color(0xFFF0F2F3)
     val Gray100= Color(0xFFB7B9CA)
     val Gray600= Color(0xFF656472)
     val Salmon= Color(0xFFEB4F6D)
     val Transparent= Color(0x00000000)
+    val Yellow400 = Color(0xfff4b82e)
+    val Red400 = Color(0xffb35b5c)
+    val Green400 = Color(0xff72b377)
 }

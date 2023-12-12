@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -23,6 +25,12 @@ android {
 
         /* Search Countries */
         resValue "string", "search_countries_base_url", "https://restcountries.com/"
+
+        /* Places */
+        resValue "string", "places_base_url", "https://places.googleapis.com/"
+
+        /* Google Maps Apis */
+        resValue "string", "maps_api_base_url", "https://maps.googleapis.com/maps/api/place/"
 
         vectorDrawables {
             useSupportLibrary true
@@ -74,7 +82,8 @@ dependencies {
     androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
 
     /* Android X */
-    def nav_version = "2.7.4"
+    def nav_version = "2.7.5"
+    implementation "androidx.annotation:annotation:1.7.0"
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -118,6 +127,18 @@ dependencies {
     ksp "com.github.bumptech.glide:ksp:$glide"
     implementation "com.github.bumptech.glide:compose:1.0.0-beta01"
 
+    /* Firebase */
+    implementation platform('com.google.firebase:firebase-bom:32.4.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    /* Google Maps */
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    implementation 'com.google.maps.android:android-maps-utils:3.5.3'
+
+    /* Google Places */
+    implementation 'com.google.android.libraries.places:places:3.3.0'
+
+    /* Timber */
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
     /* Test */
@@ -137,15 +158,23 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:2.2.0-alpha13"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-core-ktx")
+
 
     /* Compose Activity */
-    implementation 'androidx.activity:activity-compose:1.8.0'
+    implementation 'androidx.activity:activity-compose:1.8.1'
 
     /* Compose Material 3 */
-    implementation 'androidx.compose.material3:material3:1.2.0-alpha10'
+    implementation 'androidx.compose.material3:material3:1.2.0-alpha11'
 
     /* Compose Test */
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    /* Google Maps Compose */
+    def maps = "3.1.1"
+    implementation "com.google.maps.android:maps-compose:$maps"
+    implementation "com.google.maps.android:maps-compose-utils:$maps"
+    implementation "com.google.maps.android:maps-compose-widgets:$maps"
 
 }

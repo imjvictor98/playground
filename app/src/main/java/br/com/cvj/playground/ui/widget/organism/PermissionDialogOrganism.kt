@@ -1,9 +1,19 @@
 package br.com.cvj.playground.ui.widget.organism
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import br.com.cvj.playground.util.extension.callPhone
 
 @Composable
 fun PermissionDialogOrganism(
@@ -16,11 +26,21 @@ fun PermissionDialogOrganism(
 ) {
     AlertDialog(
         onDismissRequest = {},
+
         confirmButton = {
-            if (isPermanentlyDeclined) {
-                onGoToAppSettingsClick()
-            } else {
-                onOkClick()
+            Button(
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.padding(end = 8.dp),
+                shape = RoundedCornerShape(24.dp),
+                onClick = {
+                    if (isPermanentlyDeclined) {
+                        onGoToAppSettingsClick()
+                    } else {
+                        onOkClick()
+                    }
+                }
+            ) {
+                Text(modifier = Modifier.padding(horizontal = 8.dp), text = if (isPermanentlyDeclined) "Ir para configurações" else "Ok")
             }
         },
         dismissButton = { onDismiss() },

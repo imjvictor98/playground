@@ -2,7 +2,7 @@ package br.com.cvj.playground.util.extension
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
+import android.util.Patterns
 import okio.IOException
 import timber.log.Timber
 import java.io.BufferedInputStream
@@ -47,4 +47,8 @@ fun String.getDate(format: String = ""): Date? {
     } catch (e: Exception) {
         return null
     }
+}
+
+fun String.isPhoneNumber(): Boolean {
+    return Patterns.PHONE.matcher(this).matches()
 }
