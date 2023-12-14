@@ -24,4 +24,11 @@
 
     <string name="activity_search_city">Pesquisar cidade</string>
     <string name="activity_search_no_cities_found">Não encontramos cidades disponíveis 😕</string>
+
+    <string name="loading_carousel_text_1">Relaxa, já estamos buscando as informações do clima pra você!</string>
+    <string name="loading_carousel_text_2">Segura a ansiedade que estamos trabalhando forte pra te entregar a previsão mais de boa</string>
+    <string name="loading_carousel_text_3">Estamos pedindo ajuda pros nossos metereólogos pra te trazer as infos mais cabulosas</string>
+    <string name="loading_carousel_text_4">Nosso app tá buscando as informações do tempo pra você. Já, já a gente te fala se vai dar praia ou não!</string>
+    <string name="loading_carousel_text_5">Tá quase lá, só mais um pouquinho enquanto nosso app traz as informações fresquinhas do clima</string>
+    <string name="loading_carousel_text_6">Nosso app tá suando a camisa para buscar a melhor previsão do tempo para você. Obrigado por esperar!</string>
 </resources>
