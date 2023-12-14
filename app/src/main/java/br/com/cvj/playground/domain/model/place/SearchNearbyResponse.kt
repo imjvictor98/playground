@@ -76,7 +76,23 @@ data class SearchNearbyResponse(
         @Json(name = "websiteUri")
         val websiteUri: String?
     ) {
+        fun toFillUnavailablePhotos() = photos
+            ?: arrayListOf(
+                Photo(
+                    authorAttributions = null,
+                    name = "Dump Photo",
+                    heightPx = 1024,
+                    widthPx = 1024
+                )
+            )
+
         fun toPriceLevelMoneyDTO() = SearchNearbyPriceLevel(priceLevel)
+
+        enum class PhotoAvailability {
+            AVAILABLE,
+            UNAVAILABLE,
+        }
+
         @JsonClass(generateAdapter = true)
         data class AccessibilityOptions(
             @Json(name = "wheelchairAccessibleEntrance")

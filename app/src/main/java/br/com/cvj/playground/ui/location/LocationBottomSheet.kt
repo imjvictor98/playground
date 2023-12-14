@@ -1,6 +1,5 @@
 package br.com.cvj.playground.ui.location
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -20,7 +19,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Call
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
@@ -48,8 +46,8 @@ import br.com.cvj.playground.ui.theme.Typography
 import br.com.cvj.playground.ui.widget.RatingBar
 import br.com.cvj.playground.util.extension.callPhone
 import br.com.cvj.playground.util.extension.isPhoneNumber
-import br.com.cvj.playground.util.extension.shareToMaps
 import br.com.cvj.playground.util.extension.shareLink
+import br.com.cvj.playground.util.extension.shareToMaps
 import br.com.cvj.playground.util.helper.GoogleMapsHelper
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -74,7 +72,7 @@ fun LocationBottomSheet(places: List<SearchNearbyResponse.Place>) {
                     .nestedScroll(rememberNestedScrollInteropConnection())
             ) {
                 LazyColumn(Modifier.padding(bottom = 8.dp)) {
-                    itemsIndexed(places) { index, place ->
+                    itemsIndexed(places, contentType = { _, place -> place }) { index, place ->
                         Column(
                             modifier = Modifier
                                 .background(Colors.Gray)
@@ -106,10 +104,10 @@ fun LocationBottomSheet(places: List<SearchNearbyResponse.Place>) {
                             ) {
                                 val placePhotosCount = place.photos?.size ?: 0
                                 LocationPlaceGridImages(
-                                    photos = place.photos?.subList(
+                                    photos = place.toFillUnavailablePhotos().subList(
                                         0,
                                         if (placePhotosCount >= 6) 6 else placePhotosCount
-                                    ) ?: emptyList()
+                                    )
                                 )
                                 LocationPlaceDetails(place = place)
                             }
@@ -130,11 +128,11 @@ fun LocationPlaceGridImages(photos: List<SearchNearbyResponse.Place.Photo?>) {
     LazyHorizontalStaggeredGrid(
         state = state,
         modifier = Modifier.height(300.dp),
-        rows = StaggeredGridCells.Fixed(2),
+        rows = StaggeredGridCells.Adaptive(100.dp),
         contentPadding = PaddingValues(2.dp),
 
         ) {
-        items(photos) { photo ->
+        items(photos, contentType = { photo -> photo }) { photo ->
             Box(
                 modifier = Modifier
                     .padding(4.dp)
@@ -168,6 +166,7 @@ fun LocationPlaceDetails(place: SearchNearbyResponse.Place) {
             color = Colors.Black,
             fontSize = 20.sp,
         )
+
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -218,11 +217,12 @@ fun LocationPlaceDetailsOptions(place: SearchNearbyResponse.Place) {
             }
 
             if (content === "wheel") {
-                Image(
+                Icon(
                     modifier = Modifier
                         .then(contentPadding)
-                        .size(14.dp),
+                        .size(16.dp),
                     painter = painterResource(id = R.drawable.ic_wheelchair_line_18_black),
+                    tint = Colors.Blue500,
                     contentDescription = ""
                 )
             } else {

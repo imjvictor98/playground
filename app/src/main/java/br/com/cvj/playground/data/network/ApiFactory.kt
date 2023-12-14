@@ -84,7 +84,7 @@ object ApiFactory {
         }
 
         val logging = HttpLoggingInterceptor()
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         httpClient.addInterceptor(logging).callTimeout(10000, TimeUnit.SECONDS)
 

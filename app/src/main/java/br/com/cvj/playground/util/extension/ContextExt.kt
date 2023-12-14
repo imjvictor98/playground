@@ -1,8 +1,10 @@
 package br.com.cvj.playground.util.extension
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.view.inputmethod.InputMethodManager
 
 
 fun Context.shareToMaps(mapsUrl: String) {
@@ -43,3 +45,14 @@ fun Context.callPhone(phone: String) {
         e.printStackTrace()
     }
 }
+
+fun Context.hideKeyboard() {
+    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val currentFocusedView = (this as? Activity)?.currentFocus
+    if (currentFocusedView != null) {
+        inputMethodManager.hideSoftInputFromWindow(currentFocusedView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+    }
+}
+
+val Context.activity: Activity?
+    get() = this as? Activity

@@ -41,7 +41,7 @@ class LocationViewModel(
             ))) {
                 is NetworkResponse.Success -> {
                     _locationUiState.value = LocationUiState.Success(response.body.places)
-                    Timber.d("Fetch Places Api returns: %s", response.body.places[0].displayName)
+                    Timber.d("Fetch Places Api returns: %s", response.body.places)
                 }
                 is NetworkResponse.NetworkError -> {
                     Timber.e(response.error, "Error to make request to places API: %s", response.toString())

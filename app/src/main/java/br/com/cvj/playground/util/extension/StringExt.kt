@@ -9,9 +9,11 @@ import java.io.BufferedInputStream
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
+import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.regex.Pattern
 
 
 fun String.toBitMap(): Bitmap? {
@@ -51,4 +53,10 @@ fun String.getDate(format: String = ""): Date? {
 
 fun String.isPhoneNumber(): Boolean {
     return Patterns.PHONE.matcher(this).matches()
+}
+
+fun String.removeAccents(): String {
+    val normalizer: String = Normalizer.normalize(this, Normalizer.Form.NFD)
+    val pattern: Pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
+    return pattern.matcher(normalizer).replaceAll("")
 }

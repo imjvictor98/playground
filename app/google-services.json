@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "338865210475",
+    "project_id": "playground-f267b",
+    "storage_bucket": "playground-f267b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338865210475:android:221fbec24014a0a41ddd2e",
+        "android_client_info": {
+          "package_name": "br.com.cvj.playground"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKFm7roeu00EGbDu9uuNFEKpFurWw-Kpk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

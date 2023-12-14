@@ -1,5 +1,6 @@
 package br.com.cvj.playground.ui.location
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.location.Location
@@ -81,7 +82,7 @@ class LocationActivity : ComponentActivity() {
 fun LocationScreen(
     location: Location? = null, viewModel: LocationViewModel = viewModel(
         factory = LocationViewModel.Factory(
-            PlaceRepository(ApiFactory.getPlacesServices(LocalContext.current.applicationContext))
+            PlaceRepository(ApiFactory.getPlacesServices(LocalContext.current as Activity))
         )
     )
 ) {

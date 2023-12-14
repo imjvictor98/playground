@@ -21,4 +21,7 @@
     <string name="title_activity_foo">FooActivity</string>
     <string name="title_activity_example">Example</string>
     <string name="title_activity_home">HomeActivity</string>
+
+    <string name="activity_search_city">Pesquisar cidade</string>
+    <string name="activity_search_no_cities_found">Não encontramos cidades disponíveis 😕</string>
 </resources>

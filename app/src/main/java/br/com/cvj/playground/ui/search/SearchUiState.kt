@@ -10,4 +10,6 @@ sealed class SearchUiState {
     object Empty : SearchUiState()
 
     object Loading: SearchUiState()
+
+    object Typing: SearchUiState()
 }
