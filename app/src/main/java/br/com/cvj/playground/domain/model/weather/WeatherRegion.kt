@@ -1,6 +1,8 @@
 package br.com.cvj.playground.domain.model.weather
 
-enum class WeatherRegion(val acronym: String, val country: String) {
+import java.io.Serializable
+
+enum class WeatherRegion(val acronym: String, val country: String): Serializable {
     ACRE("AC", "Acre"),
     ALAGOAS("AL", "Alagoas"),
     AMAPA("AP", "Amapá"),

@@ -4,7 +4,12 @@
     <!-- ACTIVITY PERMISSION LOCATION -->
     <string name="activity_permission_location_skip_btn">Pular</string>
     <string name="activity_permission_location_info_text">Nós precisamos da sua localização para fornecer informações sobre o tempo na sua região.</string>
+    <string name="activity_permission_location_redirect_settings_info_text">Parece que você recusou a permissão de localização.\nCaso queira usar o app, habilite a permissão de localização nas configurações do app.</string>
     <string name="activity_permission_location_request_btn">Habilitar localização</string>
+    <string name="activity_permission_phone_info_text">Para oferecer a funcionalidade de ligar para os lugares diretamente do aplicativo, precisamos da permissão para acessar o discador do seu telefone. </string>
+    <string name="activity_permission_request_btn">Habilitar permissão</string>
+    <string name="activity_settings_btn">Ir para configurações</string>
+    <string name="activity_permission_location_title">Permissão de localização</string>
     <string name="title_activity_main_compose">MainComposeActivity</string>
     <string name="format_hour">%s:%s</string>
     <string name="now">Agora</string>
@@ -13,4 +18,10 @@
     <string name="weather_resume_humidity">Umidade</string>
     <string name="weather_resume_chance_of_rain">Chuva</string>
     <string name="weather_resume_wind">Vento</string>
+    <string name="title_activity_foo">FooActivity</string>
+    <string name="title_activity_example">Example</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="activity_search_city">Pesquisar cidade</string>
+    <string name="activity_search_no_cities_found">Não encontramos cidades disponíveis 😕</string>
 </resources>

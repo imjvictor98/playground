@@ -1,10 +1,15 @@
 package br.com.cvj.playground.domain.model.forecast
 
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import br.com.cvj.playground.R
 import br.com.cvj.playground.domain.model.weather.WeatherCondition
-import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class Day(
@@ -48,12 +53,12 @@ data class Day(
     val totalsnowCm: Double? = 0.0,
     @Json(name = "uv")
     val uv: Double? = 0.0
-) {
+): Serializable {
     fun getDayByTypeDTO(type: DayByType) = DayByTypeDTO(type, this)
 
 }
 
-enum class DayByType {
+enum class DayByType : Serializable{
     WIND,
     HUMIDITY,
     CHANCE_OF_RAIN
@@ -62,4 +67,79 @@ enum class DayByType {
 data class DayByTypeDTO(
     val type: DayByType,
     val day: Day
-)
+): Serializable {
+    fun getProviderResources(): DayTypeProvider {
+        return when (type) {
+            DayByType.WIND -> DayTypeProviderByWind(day)
+            DayByType.HUMIDITY -> DayTypeProviderByHumidity(day)
+            DayByType.CHANCE_OF_RAIN -> DayTypeProviderByChanceOfRain(day)
+        }
+    }
+}
+
+interface DayTypeProvider {
+    @Composable
+    fun getIcon(): Painter
+    @Composable
+    fun getTitle(): String
+    @Composable
+    fun getDescription(): String
+}
+
+class DayTypeProviderByWind(private val day: Day): DayTypeProvider {
+    @Composable
+    override fun getIcon(): Painter {
+        return painterResource(id = R.drawable.ic_wind_18dp_blue)
+    }
+
+    @Composable
+    override fun getTitle(): String {
+        return stringResource(id = R.string.weather_resume_wind)
+    }
+
+    @Composable
+    override fun getDescription(): String {
+        return stringResource(
+            id = R.string.string_format_kmh,
+            day.maxwindKph?.toInt().toString()
+        )
+    }
+}
+class DayTypeProviderByHumidity(private val day: Day): DayTypeProvider {
+    @Composable
+    override fun getIcon(): Painter {
+        return painterResource(id = R.drawable.ic_humidity_18dp_blue)
+    }
+
+    @Composable
+    override fun getTitle(): String {
+        return stringResource(id = R.string.weather_resume_humidity)
+    }
+
+    @Composable
+    override fun getDescription(): String {
+        return stringResource(
+            id = R.string.string_format_percent,
+            day.avghumidity?.toInt().toString()
+        )
+    }
+}
+class DayTypeProviderByChanceOfRain(private val day: Day): DayTypeProvider {
+    @Composable
+    override fun getIcon(): Painter {
+        return painterResource(id = R.drawable.ic_chance_rain_18dp_blue)
+    }
+
+    @Composable
+    override fun getTitle(): String {
+        return stringResource(id = R.string.weather_resume_chance_of_rain)
+    }
+
+    @Composable
+    override fun getDescription(): String {
+        return stringResource(
+            id = R.string.string_format_percent,
+            day.dailyChanceOfRain.toString()
+        )
+    }
+}

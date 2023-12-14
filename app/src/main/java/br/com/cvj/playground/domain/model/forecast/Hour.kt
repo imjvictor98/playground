@@ -2,9 +2,9 @@ package br.com.cvj.playground.domain.model.forecast
 
 
 import br.com.cvj.playground.domain.model.weather.WeatherCondition
-import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 import java.util.Date
 
 @JsonClass(generateAdapter = true)
@@ -75,4 +75,4 @@ data class Hour(
     val windchillC: Double? = 0.0,
     @Json(name = "windchill_f")
     val windchillF: Double? = 0.0
-)
+): Serializable

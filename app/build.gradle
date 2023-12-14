@@ -1,23 +1,37 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
+    id 'kotlin-android'
+    id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "br.com.cvj.playground"
         minSdk 23
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        /* Weather */
         resValue "string", "weather_api_key", "d2b27eae3025419b9ff125957230803"
-        resValue "string", "base_url", "https://api.weatherapi.com/v1/"
+        resValue "string", "weather_base_url", "https://api.weatherapi.com/v1/"
+
+        /* Search Countries */
+        resValue "string", "search_countries_base_url", "https://restcountries.com/"
+
+        /* Places */
+        resValue "string", "places_base_url", "https://places.googleapis.com/"
+
+        /* Google Maps Apis */
+        resValue "string", "maps_api_base_url", "https://maps.googleapis.com/maps/api/place/"
+
         vectorDrawables {
             useSupportLibrary true
         }
@@ -42,24 +56,35 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'br.com.cvj.playground'
 }
 
 dependencies {
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
 
     /* Android X */
-    def nav_version = "2.5.3"
-    implementation 'androidx.core:core-ktx:1.10.0'
+    def nav_version = "2.7.5"
+    implementation "androidx.annotation:annotation:1.7.0"
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
@@ -67,12 +92,21 @@ dependencies {
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
 
     /* Retrofit */
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    def retrofit = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-    implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
+    /* Leak Canary */
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
+
+    /* Moshi */
+    def moshi = "1.14.0"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi"
+    implementation "com.squareup.moshi:moshi:$moshi"
 
     /* NetworkResponse Wrapper */
     implementation 'com.github.haroldadmin:NetworkResponseAdapter:4.1.0'
@@ -84,13 +118,28 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     /* Material*/
-    implementation 'com.google.android.material:material:1.7.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
 
     /* Glide */
     def glide = "4.15.0"
     implementation "com.github.bumptech.glide:glide:$glide"
-    kapt "com.github.bumptech.glide:compiler:$glide"
+    ksp "com.github.bumptech.glide:ksp:$glide"
+    implementation "com.github.bumptech.glide:compose:1.0.0-beta01"
+
+    /* Firebase */
+    implementation platform('com.google.firebase:firebase-bom:32.4.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    /* Google Maps */
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    implementation 'com.google.maps.android:android-maps-utils:3.5.3'
+
+    /* Google Places */
+    implementation 'com.google.android.libraries.places:places:3.3.0'
+
+    /* Timber */
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 
     /* Test */
     testImplementation 'junit:junit:4.13.2'
@@ -105,15 +154,27 @@ dependencies {
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     debugImplementation 'androidx.compose.ui:ui-tooling'
+    implementation "com.google.accompanist:accompanist-themeadapter-material:0.28.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.2.0-alpha13"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-core-ktx")
+
 
     /* Compose Activity */
-    implementation 'androidx.activity:activity-compose:1.7.1'
+    implementation 'androidx.activity:activity-compose:1.8.1'
 
     /* Compose Material 3 */
-    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material3:material3:1.2.0-alpha11'
 
     /* Compose Test */
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    /* Google Maps Compose */
+    def maps = "3.1.1"
+    implementation "com.google.maps.android:maps-compose:$maps"
+    implementation "com.google.maps.android:maps-compose-utils:$maps"
+    implementation "com.google.maps.android:maps-compose-widgets:$maps"
 
 }

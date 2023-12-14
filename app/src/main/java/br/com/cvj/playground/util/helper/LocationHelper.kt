@@ -2,11 +2,9 @@ package br.com.cvj.playground.util.helper
 
 import android.content.Context
 import android.location.Location
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
+import androidx.annotation.FloatRange
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.Task
 
 object LocationHelper {
     private const val TAG = "LOCATION_HELPER"
@@ -15,20 +13,45 @@ object LocationHelper {
         return LocationServices.getFusedLocationProviderClient(context)
     }
 
-    fun getLastLocation(context: Context): Task<Location>? {
-        if (GoogleApiAvailability.getInstance()
-                .isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS
-        ) {
-            return null
-        }
-        return if (PermissionHelper.hasLocationPermissions(context)) {
-            try {
-                getFusedLocationProvider(context).lastLocation
-            } catch (e: SecurityException) {
-                null
+    fun getLastLocation(context: Context, onLocationAvailability: LocationAvailabilityListener) {
+        try {
+            val taskToGetLocation = getFusedLocationProvider(context).lastLocation
+
+            taskToGetLocation.addOnSuccessListener {
+                if (it != null) {
+                    onLocationAvailability.onSuccess(it)
+                } else {
+                    onLocationAvailability.onFailure()
+                }
             }
-        } else {
-            null
+
+            taskToGetLocation.addOnFailureListener {
+                onLocationAvailability.onError(it)
+            }
+
+            taskToGetLocation.addOnCanceledListener {
+                onLocationAvailability.onFailure()
+            }
+        } catch (e: SecurityException) {
+            onLocationAvailability.onError(e)
         }
+    }
+
+    fun getLocationByLatLong(
+        @FloatRange(from = -90.0, to = 90.0) latitude: Double,
+        @FloatRange(from = -180.0, to = 180.0) longitude: Double,
+    ): Location {
+        Location("").apply {
+            setLatitude(latitude)
+            setLongitude(longitude)
+            return this
+        }
+    }
+
+    interface LocationAvailabilityListener {
+        fun onSuccess(location: Location)
+        fun onFailure()
+
+        fun onError(exception: Exception)
     }
 }
