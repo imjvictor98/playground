@@ -28,7 +28,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,6 +65,7 @@ import br.com.cvj.playground.ui.search.SearchActivity
 import br.com.cvj.playground.ui.theme.Colors
 import br.com.cvj.playground.ui.theme.hirukoProFamily
 import br.com.cvj.playground.ui.theme.mazzardDmFamily
+import br.com.cvj.playground.ui.widget.LoadingCarousel
 import br.com.cvj.playground.ui.widget.atom.TextTabAtom
 import br.com.cvj.playground.ui.widget.molecule.SearchableHeaderMolecule
 import br.com.cvj.playground.ui.widget.molecule.TabLayoutMolecule
@@ -120,8 +120,8 @@ fun HomeScreen(
     when (val state = homeUiState.value) {
         is HomeUiState.IsLoading -> {
             if (state.isLoading) {
-                Box(contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Colors.Salmon, strokeWidth = 5.dp)
+                Box(modifier = Modifier, contentAlignment = Alignment.Center) {
+                    LoadingCarousel()
                 }
             }
         }
